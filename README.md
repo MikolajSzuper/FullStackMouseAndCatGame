@@ -84,10 +84,4 @@ Po starcie dostępni są m.in.:
 
 ---
 
-## 📄 Licencja
-
-MIT
-
----
-
-**Autor:** [Twoje Imię lub Nick](https://github.com/twoj-login)
+**Autor:** [Mikołaj Szuper](https://github.com/MikolajSzuper)
