@@ -1,0 +1,192 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #181a1b;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+body {
+  min-height: 100vh;
+  background: #181a1b;
+}
+
+/* --- Styl dla logowania i rejestracji --- */
+.auth-bg {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #181a1b;
+}
+
+.auth-container {
+  background: #23272a;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px #000a;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.auth-container form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.auth-container input {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  box-sizing: border-box;
+}
+
+/* --- Styl dla głównego widoku po zalogowaniu --- */
+.main-bg {
+  min-height: 100vh;
+  background: #181a1b;
+}
+
+.main-layout {
+  display: flex;
+  min-height: 100vh;
+  height: 100vh;
+  background: #181a1b;
+}
+
+.sidebar {
+  background: #23272a;
+  color: #fff;
+  width: 220px;
+  min-width: 220px;
+  max-width: 260px;
+  padding: 2rem 1rem;
+  border-right: 2px solid #27ae60;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 100vh;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+/* --- Wspólne style --- */
+.toggle-btn {
+  background: #27ae60;
+  color: #fff;
+  border: none;
+  margin-top: 1rem;
+  padding: 0.5rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+input, button {
+  display: block;
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 0.7rem;
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+}
+
+input {
+  background: #181a1b;
+  color: #fff;
+  border: 1px solid #27ae60;
+}
+
+button {
+  background: #27ae60;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #219150;
+}
+
+.input-label {
+  font-size: 0.9em;
+  color: #ccc;
+  margin-bottom: 0.1em;
+  margin-top: 0.7em;
+  text-align: left;
+  width: 100%;
+  display: block;
+}
+
+.sidebar-btn {
+  width: 100%;
+  background: none;
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1rem;
+  text-align: left;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  font-size: 1.05em;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.sidebar-btn.active,
+.sidebar-btn:hover {
+  background: #27ae60;
+  color: #fff;
+}
+
+.game-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-info h1 {
+  margin-bottom: 1rem;
+}
+
+.game-info button {
+  display: inline-block;
+  width: auto;
+}
+
+.game-info .button-row {
+  display: flex;
+  flex-direction: row;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.button-row {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
