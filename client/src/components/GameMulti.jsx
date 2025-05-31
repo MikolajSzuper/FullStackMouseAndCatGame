@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 
 const nodes = [
   { id: 0, x: 200, y: 50 },   // mysz start
@@ -30,11 +30,10 @@ export default function GameMulti({ roomId, username, onBack }) {
   const [left, setLeft] = useState(false)
   const [rematch, setRematch] = useState(false)
   const [opponentRematch, setOpponentRematch] = useState(false)
-  const intervalRef = useRef()
 
   // Polling na stan pokoju i gry
   useEffect(() => {
-    intervalRef.current = setInterval(() => {
+    const interval = setInterval(() => {
       fetch(`http://localhost:5000/api/rooms/${roomId}`)
         .then(res => res.json())
         .then(data => {
@@ -89,7 +88,7 @@ export default function GameMulti({ roomId, username, onBack }) {
         setRoom(null)
         setLoading(false)
       })
-    return () => clearInterval(intervalRef.current)
+    return () => clearInterval(interval)
   }, [roomId, username])
 
   // Inicjalizacja gry po dołączeniu drugiego gracza lub rematch
@@ -181,7 +180,8 @@ export default function GameMulti({ roomId, username, onBack }) {
       body: JSON.stringify({ username }),
     })
     setLeft(true)
-    onBack()
+    localStorage.removeItem('roomId')
+    if (onBack) onBack()
   }
 
   const handleRematch = async () => {

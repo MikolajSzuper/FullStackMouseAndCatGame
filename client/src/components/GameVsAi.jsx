@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 const nodes = [
   { id: 0, x: 200, y: 50 },   // mysz start
@@ -29,7 +29,7 @@ function getCatMoveRandom(catPos, mousePos) {
   return neighbors[idx].id
 }
 
-export default function GameVsAi({ onBack }) {
+export default function GameVsAi({ onBack, username }) {
   // Losowanie ról na początku gry
   const [playerRole, setPlayerRole] = useState(null) // 'mouse' lub 'cat'
   const [mousePos, setMousePos] = useState(0)
@@ -126,6 +126,20 @@ export default function GameVsAi({ onBack }) {
       }
     }
   }, [turn, playerRole, catPos, mousePos, winner])
+
+  // Wyślij wynik do serwera po zakończeniu gry
+  useEffect(() => {
+    if (!winner || !username) return
+    fetch('http://localhost:5000/api/result', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username,
+        mode: 'vs_ai',
+        result: winner === playerRole ? 'win' : 'lose'
+      })
+    })
+  }, [winner, username, playerRole])
 
   let info = ''
   if (playerRole === null) {

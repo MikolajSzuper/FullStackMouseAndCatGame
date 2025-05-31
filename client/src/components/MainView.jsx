@@ -10,7 +10,7 @@ export default function MainView({ username, setToast }) {
     return <GameLocal onBack={() => setMode(null)} />
   }
   if (mode === 'ai') {
-    return <GameVsAi onBack={() => setMode(null)} />
+  return <GameVsAi onBack={() => setMode(null)} username={username} />
   }
   if (mode === 'rooms') {
   return <RoomsView onBack={() => setMode(null)} setToast={setToast} username={username} />
