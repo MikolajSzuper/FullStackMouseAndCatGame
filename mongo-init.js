@@ -2,14 +2,14 @@ db = db.getSiblingDB('cat_and_mouse');
 
 const users = [
   {
-    username: "alice",
+    username: "Jan",
     password: "$2a$10$7Qw3Qw3Qw3Qw3Qw3Qw3QwOQw3Qw3Qw3Qw3Qw3Qw3Qw3Qw3Qw3Qw3Q", // bcrypt hash
     email: "alice@example.com",
     stats: { games: 10, wins: 7, losses: 3 },
     createdAt: new Date()
   },
   {
-    username: "bob",
+    username: "Andrzej",
     password: "$2a$10$7Qw3Qw3Qw3Qw3Qw3Qw3QwOQw3Qw3Qw3Qw3Qw3Qw3Qw3Qw3Qw3Qw3Q", // bcrypt hash
     email: "bob@example.com",
     stats: { games: 8, wins: 3, losses: 5 },
@@ -17,34 +17,34 @@ const users = [
   }
 ];
 
-// 25 użytkowników z realnymi nazwami
 const realNames = [
-  { username: "john", email: "john.doe@example.com" },
-  { username: "emma", email: "emma.watson@example.com" },
-  { username: "oliver", email: "oliver.smith@example.com" },
-  { username: "amelia", email: "amelia.jones@example.com" },
-  { username: "liam", email: "liam.brown@example.com" },
-  { username: "sophia", email: "sophia.davis@example.com" },
-  { username: "noah", email: "noah.miller@example.com" },
-  { username: "ava", email: "ava.wilson@example.com" },
-  { username: "elijah", email: "elijah.moore@example.com" },
-  { username: "mia", email: "mia.taylor@example.com" },
-  { username: "lucas", email: "lucas.anderson@example.com" },
-  { username: "isabella", email: "isabella.thomas@example.com" },
-  { username: "mason", email: "mason.jackson@example.com" },
-  { username: "charlotte", email: "charlotte.white@example.com" },
-  { username: "logan", email: "logan.harris@example.com" },
-  { username: "harper", email: "harper.martin@example.com" },
-  { username: "james", email: "james.thompson@example.com" },
-  { username: "ella", email: "ella.garcia@example.com" },
-  { username: "benjamin", email: "benjamin.martinez@example.com" },
-  { username: "grace", email: "grace.robinson@example.com" },
-  { username: "jack", email: "jack.clark@example.com" },
-  { username: "chloe", email: "chloe.rodriguez@example.com" },
-  { username: "henry", email: "henry.lewis@example.com" },
-  { username: "lily", email: "lily.lee@example.com" },
-  { username: "alex", email: "alex.walker@example.com" }
+  { username: "Janek", email: "john.doe@example.com" },
+  { username: "Zosia", email: "emma.watson@example.com" },
+  { username: "Olek", email: "oliver.smith@example.com" },
+  { username: "Amelka", email: "amelia.jones@example.com" },
+  { username: "Jasiek", email: "liam.brown@example.com" },
+  { username: "Sylwia", email: "sophia.davis@example.com" },
+  { username: "Norbert", email: "noah.miller@example.com" },
+  { username: "Anka", email: "ava.wilson@example.com" },
+  { username: "Eliasz", email: "elijah.moore@example.com" },
+  { username: "Miśka", email: "mia.taylor@example.com" },
+  { username: "Lukasz", email: "lucas.anderson@example.com" },
+  { username: "Iza", email: "isabella.thomas@example.com" },
+  { username: "Maciek", email: "mason.jackson@example.com" },
+  { username: "Karolina", email: "charlotte.white@example.com" },
+  { username: "Leszek", email: "logan.harris@example.com" },
+  { username: "Hania", email: "harper.martin@example.com" },
+  { username: "Jakub", email: "james.thompson@example.com" },
+  { username: "Ela", email: "ella.garcia@example.com" },
+  { username: "Bartek", email: "benjamin.martinez@example.com" },
+  { username: "Gracja", email: "grace.robinson@example.com" },
+  { username: "Jacek", email: "jack.clark@example.com" },
+  { username: "Klara", email: "chloe.rodriguez@example.com" },
+  { username: "Henio", email: "henry.lewis@example.com" },
+  { username: "Lilka", email: "lily.lee@example.com" },
+  { username: "Alek", email: "alex.walker@example.com" }
 ];
+
 
 realNames.forEach(person => {
   users.push({
