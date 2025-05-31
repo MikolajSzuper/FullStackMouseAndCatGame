@@ -47,9 +47,9 @@ export default function GameMulti({ roomId, username, onBack }) {
           setLoading(false)
           if (data.game) setGame(data.game)
           // Ustal role na podstawie kolejności w tablicy players
-          if (Array.isArray(data.players)) {
-            if (data.players[0] === username) setRole('mouse')
-            else if (data.players[1] === username) setRole('cat')
+          if (data.game && data.game.mouse && data.game.cat) {
+            if (data.game.mouse === username) setRole('mouse')
+            else if (data.game.cat === username) setRole('cat')
           }
           // Rematch logic
           if (data.rematchVotes) {
@@ -77,9 +77,9 @@ export default function GameMulti({ roomId, username, onBack }) {
         setRoom(data)
         setLoading(false)
         if (data.game) setGame(data.game)
-        if (Array.isArray(data.players)) {
-          if (data.players[0] === username) setRole('mouse')
-          else if (data.players[1] === username) setRole('cat')
+        if (data.game && data.game.mouse && data.game.cat) {
+          if (data.game.mouse === username) setRole('mouse')
+          else if (data.game.cat === username) setRole('cat')
         }
         if (data.rematchVotes) {
           setOpponentRematch(
@@ -106,6 +106,9 @@ export default function GameMulti({ roomId, username, onBack }) {
         // tylko pierwszy gracz inicjuje grę
         if (room.players[0] === username) {
           const token = localStorage.getItem('token')
+          const shuffled = [...room.players].sort(() => Math.random() - 0.5)
+          const mouse = shuffled[0]
+          const cat = shuffled[1]
           fetch(`${API_URL}/api/rooms/${roomId}/game`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
@@ -114,7 +117,9 @@ export default function GameMulti({ roomId, username, onBack }) {
               catPos: 5,
               turn: 'mouse',
               winner: null,
-              moveCount: 0
+              moveCount: 0,
+              mouse,
+              cat
             })
           }).then(() => {
             fetch(`${API_URL}/api/rooms/${roomId}/rematch`, {
@@ -133,7 +138,29 @@ export default function GameMulti({ roomId, username, onBack }) {
   const handleMove = async (to) => {
     if (!game || game.winner) return
     const token = localStorage.getItem('token')
+    // MYSZ
     if (role === 'mouse' && game.turn === 'mouse' && isNeighbor(game.mousePos, to) && to !== game.catPos) {
+      // Jeśli po ruchu mysz jest sąsiadem kota, kot wygrywa
+      if (isNeighbor(to, game.catPos)) {
+        await fetch(`${API_URL}/api/rooms/${roomId}/game`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({
+            ...game,
+            mousePos: to,
+            winner: 'cat',
+            moveCount: game.moveCount + 1,
+            turn: null
+          })
+        })
+        await fetch(`${API_URL}/api/rooms/${roomId}/result`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ winner: 'cat' })
+        })
+        return
+      }
+      // Normalny ruch myszy
       await fetch(`${API_URL}/api/rooms/${roomId}/game`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
@@ -145,7 +172,6 @@ export default function GameMulti({ roomId, username, onBack }) {
           winner: (game.moveCount + 1) >= 15 ? 'mouse' : null
         })
       })
-      // Jeśli mysz wygrała, wyślij wynik do backendu
       if ((game.moveCount + 1) >= 15) {
         await fetch(`${API_URL}/api/rooms/${roomId}/result`, {
           method: 'POST',
@@ -153,7 +179,9 @@ export default function GameMulti({ roomId, username, onBack }) {
           body: JSON.stringify({ winner: 'mouse' })
         })
       }
+      return
     }
+    // KOT (bez zmian)
     if (role === 'cat' && game.turn === 'cat' && isNeighbor(game.catPos, to) && to !== game.mousePos) {
       let winner = null
       const mouseMoves = nodes
@@ -171,7 +199,6 @@ export default function GameMulti({ roomId, username, onBack }) {
           winner
         })
       })
-      // Jeśli kot wygrał, wyślij wynik do backendu
       if (winner) {
         await fetch(`${API_URL}/api/rooms/${roomId}/result`, {
           method: 'POST',

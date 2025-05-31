@@ -34,6 +34,12 @@ export default function GameLocal({ onBack }) {
     if (winner) return
 
     if (turn === 'mouse' && isNeighbor(mousePos, to) && to !== catPos) {
+      if (isNeighbor(to, catPos)) {
+        setMousePos(to)
+        setWinner('cat')
+        setMoveCount(c => c + 1)
+        return
+      }
       setMousePos(to)
       setMoveCount(c => {
         const next = c + 1

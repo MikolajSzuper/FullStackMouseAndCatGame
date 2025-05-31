@@ -2,15 +2,15 @@ db = db.getSiblingDB('cat_and_mouse');
 
 const users = [
   {
-    username: "Jan",
-    password: "$2a$10$7Qw3Qw3Qw3Qw3Qw3Qw3QwOQw3Qw3Qw3Qw3Qw3Qw3Qw3Qw3Qw3Qw3Q", // bcrypt hash
+    username: "Iza",
+    password: "$2a$10$$2a$10$wqjQwQyQn8wQwQyQn8wQwOQwQyQn8wQwQyQn8wQwQyQn8wQwQyQn8W", // bcrypt hash
     email: "alice@example.com",
     stats: { games: 10, wins: 7, losses: 3 },
     createdAt: new Date()
   },
   {
-    username: "Andrzej",
-    password: "$2a$10$7Qw3Qw3Qw3Qw3Qw3Qw3QwOQw3Qw3Qw3Qw3Qw3Qw3Qw3Qw3Qw3Qw3Q", // bcrypt hash
+    username: "Rysiek",
+    password: "$2a$10$$2a$10$wqjQwQyQn8wQwQyQn8wQwOQwQyQn8wQwQyQn8wQwQyQn8wQwQyQn8W", // bcrypt hash
     email: "bob@example.com",
     stats: { games: 8, wins: 3, losses: 5 },
     createdAt: new Date()
@@ -29,7 +29,7 @@ const realNames = [
   { username: "Eliasz", email: "elijah.moore@example.com" },
   { username: "Miśka", email: "mia.taylor@example.com" },
   { username: "Lukasz", email: "lucas.anderson@example.com" },
-  { username: "Iza", email: "isabella.thomas@example.com" },
+  { username: "Eliza", email: "isabella.thomas@example.com" },
   { username: "Maciek", email: "mason.jackson@example.com" },
   { username: "Karolina", email: "charlotte.white@example.com" },
   { username: "Leszek", email: "logan.harris@example.com" },

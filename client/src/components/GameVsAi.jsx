@@ -66,6 +66,11 @@ export default function GameVsAi({ onBack, username }) {
       setMousePos(to)
       setMoveCount(c => {
         const next = c + 1
+        // Sprawdź czy mysz jest sąsiadem kota po ruchu
+        if (isNeighbor(to, catPos)) {
+          setWinner('cat')
+          return next
+        }
         if (next >= 15) {
           setWinner('mouse')
           return next
@@ -73,6 +78,7 @@ export default function GameVsAi({ onBack, username }) {
         setTurn('cat')
         return next
       })
+      return
     }
     if (playerRole === 'cat' && turn === 'cat' && isNeighbor(catPos, to) && to !== mousePos) {
       setCatPos(to)
@@ -118,6 +124,11 @@ export default function GameVsAi({ onBack, username }) {
           setMousePos(move.id)
           setMoveCount(c => {
             const next = c + 1
+            // Sprawdź czy AI-mysz po ruchu jest sąsiadem kota
+            if (isNeighbor(move.id, catPos)) {
+              setWinner('cat')
+              return next
+            }
             if (next >= 15) {
               setWinner('mouse')
               return next
