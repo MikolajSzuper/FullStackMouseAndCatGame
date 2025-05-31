@@ -28,13 +28,44 @@ app.get('/api/rooms', (req, res) => {
   res.json(rooms)
 })
 
+app.get('/api/rooms/:id', (req, res) => {
+  const room = rooms.find(r => r.id === req.params.id)
+  if (!room) return res.status(404).json({ error: 'Pokój nie istnieje' })
+  res.json(room)
+})
+
+app.post('/api/rooms/:id/join', (req, res) => {
+  const { username } = req.body
+  const room = rooms.find(r => r.id === req.params.id)
+  if (!room) return res.status(404).json({ error: 'Pokój nie istnieje' })
+  if (!room.players) room.players = []
+  if (room.players.length >= 2) return res.status(400).json({ error: 'Pokój pełny' })
+  if (!room.players.includes(username)) room.players.push(username)
+  res.json(room)
+})
+
+// Zmień tworzenie pokoju, aby dodać username:
 app.post('/api/rooms', (req, res) => {
-  const { name } = req.body
+  const { name, username } = req.body
   const id = 'room' + (rooms.length + 1)
-  // Dodaj przykładowego gracza do nowego pokoju
-  const newRoom = { id, name, players: ['user' + (rooms.length + 1)] }
+  const newRoom = { id, name, players: [username || 'user' + (rooms.length + 1)] }
   rooms.push(newRoom)
   res.status(201).json(newRoom)
+})
+
+app.post('/api/rooms/:id/leave', (req, res) => {
+  const { username } = req.body
+  const room = rooms.find(r => r.id === req.params.id)
+  if (!room) return res.status(404).json({ error: 'Pokój nie istnieje' })
+  if (room.players) {
+    room.players = room.players.filter(u => u !== username)
+  }
+  // Jeśli nie ma już graczy, usuń pokój
+  if (!room.players || room.players.length === 0) {
+    rooms = rooms.filter(r => r.id !== req.params.id)
+    return res.json({ message: 'Pokój usunięty' })
+  }
+  res.json({ message: 'Gracz opuścił pokój' })
 })
 
 app.post('/api/register', async (req, res) => {

@@ -13,8 +13,8 @@ export default function MainView({ username, setToast }) {
     return <GameVsAi onBack={() => setMode(null)} />
   }
   if (mode === 'rooms') {
-    return <RoomsView onBack={() => setMode(null)} setToast={setToast} />
-  }
+  return <RoomsView onBack={() => setMode(null)} setToast={setToast} username={username} />
+}
 
   return (
     <div className="game-info">

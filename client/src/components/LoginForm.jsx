@@ -15,7 +15,11 @@ export default function LoginForm({ onSuccess, setToast }) {
     if (res.ok) {
       localStorage.setItem('token', data.token)
       setToast({ message: 'Zalogowano pomyślnie!', type: 'success' })
-      onSuccess()
+      fetch('http://localhost:5000/api/me', {
+        headers: { Authorization: `Bearer ${data.token}` }
+      })
+        .then(res => res.json())
+        .then(userData => onSuccess(userData.username))
     } else {
       setToast({ message: data.error, type: 'error' })
     }

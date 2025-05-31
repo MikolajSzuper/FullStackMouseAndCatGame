@@ -46,9 +46,9 @@ export default function App() {
         <div className="auth-bg">
           <div className="auth-container">
             {showRegister ? (
-              <RegisterForm onSuccess={() => setIsAuthenticated(true)} setToast={setToast} />
+              <RegisterForm onSuccess={(username) => {setIsAuthenticated(true), setUsername(username)}} setToast={setToast} />
             ) : (
-              <LoginForm onSuccess={() => setIsAuthenticated(true)} setToast={setToast} />
+              <LoginForm onSuccess={(username) => { setIsAuthenticated(true); setUsername(username); }} setToast={setToast} />
             )}
             <button
               className="toggle-btn"

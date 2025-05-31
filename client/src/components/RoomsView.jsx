@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
+import GameMulti from './GameMulti'
 
-export default function RoomsView({ onBack, setToast }) {
+export default function RoomsView({ onBack, setToast, username }) {
   const [rooms, setRooms] = useState([])
   const [loading, setLoading] = useState(true)
   const [newRoomName, setNewRoomName] = useState('')
+  const [joinedRoomId, setJoinedRoomId] = useState(null)
 
   useEffect(() => {
     fetch('http://localhost:5000/api/rooms')
@@ -21,16 +23,32 @@ export default function RoomsView({ onBack, setToast }) {
     const res = await fetch('http://localhost:5000/api/rooms', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: newRoomName }),
+      body: JSON.stringify({ name: newRoomName, username }),
     })
     if (res.ok) {
       const room = await res.json()
-      setRooms(r => [...r, room])
-      setNewRoomName('')
+      setJoinedRoomId(room.id)
       setToast({ message: 'Pokój utworzony!', type: 'success' })
     } else {
       setToast({ message: 'Nie udało się utworzyć pokoju', type: 'error' })
     }
+  }
+
+  const handleJoinRoom = async (roomId) => {
+    const res = await fetch(`http://localhost:5000/api/rooms/${roomId}/join`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username }),
+    })
+    if (res.ok) {
+      setJoinedRoomId(roomId)
+    } else {
+      setToast({ message: 'Nie udało się dołączyć do pokoju', type: 'error' })
+    }
+  }
+
+  if (joinedRoomId) {
+    return <GameMulti roomId={joinedRoomId} username={username} onBack={onBack} />
   }
 
   return (
@@ -44,8 +62,10 @@ export default function RoomsView({ onBack, setToast }) {
             display: 'flex',
             flexWrap: 'wrap',
             gap: '1.5rem',
-            justifyContent: 'center',
-            marginBottom: 32
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            marginBottom: 32,
+            width: '100%',
           }}>
             {rooms.map(room => (
               <div
@@ -87,6 +107,7 @@ export default function RoomsView({ onBack, setToast }) {
                   }}
                   disabled={Array.isArray(room.players) && room.players.length >= 2}
                   title={Array.isArray(room.players) && room.players.length >= 2 ? 'Pokój pełny' : 'Dołącz do pokoju'}
+                  onClick={() => handleJoinRoom(room.id)}
                 >
                   Dołącz
                 </button>
