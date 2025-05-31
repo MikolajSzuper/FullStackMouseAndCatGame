@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import '../GameCommon.css'
 
 const nodes = [
   { id: 0, x: 200, y: 50 },   // mysz start
@@ -229,12 +230,12 @@ export default function GameMulti({ roomId, username, onBack }) {
 
   // Widok gry
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div className="game-container">
       <h1>Kot i Mysz (Multiplayer)</h1>
-      <div style={{ marginBottom: 12, fontWeight: 'bold', fontSize: 20 }}>
+      <div className="game-role-info">
         Twoja rola: {role === 'mouse' ? '🐭 Mysz' : '🐱 Kot'}
       </div>
-      <svg width={600} height={600} style={{ background: 'mediumseagreen', borderRadius: 16 }}>
+      <svg width={600} height={600} className="game-board">
         {edges.map(([a, b], i) => (
           <line
             key={i}
@@ -278,54 +279,42 @@ export default function GameMulti({ roomId, username, onBack }) {
           )
         })}
       </svg>
-        <div style={{ marginTop: 24 }}>
+      <div className="game-status">
         {game.winner ? (
           <>
-            <div style={{
-              textAlign: 'center',
-              fontWeight: 'bold',
-              fontSize: 24,
-              marginBottom: 16,
-              width: 600
-            }}>
+            <div className="game-winner">
               {game.winner === 'mouse'
                 ? 'Wygrała mysz! 🐭'
                 : 'Wygrał kot! 🐱'}
             </div>
-            <div style={{
-              display: 'flex',
-              gap: 12,
-              marginBottom: 8,
-              width: 600,
-              justifyContent: 'center'
-            }}>
+            <div className="game-rematch-buttons">
               {!rematch && (
                 <button
-                  style={{ flex: 1, maxWidth: 300 }}
+                  className="game-rematch-btn"
                   onClick={handleRematch}
                 >
                   Zagraj jeszcze raz
                 </button>
               )}
               <button
-                style={{ flex: 1, maxWidth: 300 }}
+                className="game-rematch-btn"
                 onClick={handleLeave}
               >
                 Wyjdź
               </button>
             </div>
             {rematch && !opponentRematch && (
-              <div style={{ marginTop: 12, color: '#27ae60', fontWeight: 'bold', textAlign: 'center', width: 600 }}>
+              <div className="game-rematch-info">
                 Czekasz na decyzję przeciwnika...
               </div>
             )}
             {rematch && opponentRematch && (
-              <div style={{ marginTop: 12, color: '#27ae60', fontWeight: 'bold', textAlign: 'center', width: 600 }}>
+              <div className="game-rematch-info">
                 Obaj gracze chcą zagrać ponownie! Nowa gra za chwilę...
               </div>
             )}
             {!rematch && opponentRematch && (
-              <div style={{ marginTop: 12, color: '#27ae60', fontWeight: 'bold', textAlign: 'center', width: 600 }}>
+              <div className="game-rematch-info">
                 Przeciwnik chce zagrać ponownie. Kliknij "Zagraj jeszcze raz", aby rozpocząć nową grę.
               </div>
             )}
@@ -335,16 +324,8 @@ export default function GameMulti({ roomId, username, onBack }) {
         )}
       </div>
       {!game.winner && (
-        <div
-          style={{
-            display: 'flex',
-            gap: 16,
-            marginTop: 20,
-            width: 600,
-            justifyContent: 'center'
-          }}
-        >
-          <button style={{ flex: 1, maxWidth: 300 }} onClick={handleLeave}>Wyjdź</button>
+        <div className="game-buttons">
+          <button onClick={handleLeave}>Wyjdź</button>
         </div>
       )}
     </div>

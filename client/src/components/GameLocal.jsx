@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import '../GameCommon.css'
 
 const nodes = [
   { id: 0, x: 200, y: 50 },   // mysz start
@@ -63,9 +64,9 @@ export default function GameLocal({ onBack }) {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div className="game-container">
       <h1>Kot i Mysz</h1>
-      <svg width={600} height={600} style={{ background: 'mediumseagreen', borderRadius: 16 }}>
+      <svg width={600} height={600} className="game-board">
         {edges.map(([a, b], i) => (
           <line
             key={i}
@@ -106,14 +107,14 @@ export default function GameLocal({ onBack }) {
           )
         })}
       </svg>
-      <div style={{ marginTop: 24 }}>
+      <div className="game-status">
         {winner
           ? winner === 'mouse'
             ? 'Wygrała mysz! 🐭'
             : 'Wygrał kot! 🐱'
           : `Tura: ${turn === 'mouse' ? 'mysz' : 'kot'} | Ruch: ${moveCount}/15`}
       </div>
-      <div style={{ display: 'flex', gap: 16, marginTop: 20 }}>
+      <div className="game-buttons">
         <button onClick={() => {
           setMousePos(0)
           setCatPos(5)

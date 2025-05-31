@@ -2,30 +2,9 @@ import React from 'react'
 
 export default function HelpView() {
   return (
-    <div
-      className="game-info"
-      style={{
-        maxWidth: 700,
-        width: '90vw',
-        margin: '32px auto',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-        minHeight: 400
-      }}
-    >
-      <div
-        style={{
-          width: '100%',
-          background: '#23272a',
-          borderRadius: 16,
-          padding: 40,
-          boxShadow: '0 4px 32px #000a',
-          color: '#fff',
-          fontSize: 18,
-        }}
-      >
-        <h1 style={{ marginTop: 0, textAlign: 'center' }}>Jak grać w "Kot i Mysz"?</h1>
+    <div className="game-info help-container">
+      <div className="help-content">
+        <h1>Jak grać w "Kot i Mysz"?</h1>
         <p>
           <strong>Cel gry:</strong><br />
           Gra toczy się na planszy z 6 polami. Jeden gracz steruje myszą 🐭, drugi kotem 🐱.<br />

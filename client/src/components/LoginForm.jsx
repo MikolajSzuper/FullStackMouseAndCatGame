@@ -26,7 +26,7 @@ export default function LoginForm({ onSuccess, setToast }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ width: '100%', height: '100%' }}>
+    <form onSubmit={handleSubmit} className="login-form">
       <h2>Zaloguj się</h2>
       <label htmlFor="login-username" className="input-label">Nazwa użytkownika</label>
       <input

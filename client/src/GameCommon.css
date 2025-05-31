@@ -1,0 +1,47 @@
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.game-board {
+  background: mediumseagreen;
+  border-radius: 16px;
+}
+.game-status {
+  margin-top: 24px;
+}
+.game-buttons {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+}
+.game-role-info {
+  margin-bottom: 12px;
+  font-weight: bold;
+  font-size: 20px;
+}
+.game-winner {
+  text-align: center;
+  font-weight: bold;
+  font-size: 24px;
+  margin-bottom: 16px;
+  width: 600px;
+}
+.game-rematch-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+  width: 600px;
+  justify-content: center;
+}
+.game-rematch-btn {
+  flex: 1;
+  max-width: 300px;
+}
+.game-rematch-info {
+  margin-top: 12px;
+  color: #27ae60;
+  font-weight: bold;
+  text-align: center;
+  width: 600px;
+}

@@ -85,115 +85,43 @@ export default function RoomsView({ onBack, setToast, username }) {
   }
 
   return (
-    <div
-      className="game-info"
-      style={{
-        maxWidth: 900,
-        width: '98vw',
-        margin: '40px auto',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-        minHeight: 500,
-      }}
-    >
-      <div
-        style={{
-          width: '100%',
-          background: '#23272a',
-          borderRadius: 20,
-          padding: 40,
-          boxShadow: '0 6px 36px #000b',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 24,
-        }}
-      >
-        <h1 style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+    <div className="game-info rooms-container">
+      <div className="rooms-content">
+        <h1 className="rooms-header">
           Dostępne pokoje
           <button
-            style={{
-              marginBottom: 0,
-              marginLeft: 8,
-              background: 'none',
-              border: 'none',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              padding: 0,
-              display: 'flex',
-              alignItems: 'center'
-            }}
+            className="rooms-refresh-btn"
             onClick={refreshRooms}
             disabled={loading}
             title="Odśwież listę pokoi"
           >
-            <span style={{ fontSize: 28, color: '#27ae60', display: 'flex', alignItems: 'center' }}>
-              &#x21bb;
-            </span>
+            <span className="rooms-refresh-icon">&#x21bb;</span>
           </button>
         </h1>
         {loading ? (
           <div>Ładowanie...</div>
         ) : (
           <>
-            <div style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '1.5rem',
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-              marginBottom: 32,
-              width: '100%',
-            }}>
+            <div className="rooms-list">
               {(Array.isArray(rooms) ? rooms : []).length === 0 ? (
-                <div style={{
-                  color: '#aaa',
-                  fontSize: 18,
-                  padding: 32,
-                  width: '100%',
-                  textAlign: 'center'
-                }}>
+                <div className="rooms-empty">
                   Brak dostępnych pokoi.<br />Załóż własny pokój i zaproś znajomego do gry!
                 </div>
               ) : (
                 (Array.isArray(rooms) ? rooms : []).map(room => (
-                  <div
-                    key={room.id}
-                    style={{
-                      background: '#181a1b',
-                      borderRadius: 12,
-                      boxShadow: '0 2px 12px #000a',
-                      padding: 20,
-                      minWidth: 260,
-                      maxWidth: 320,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'flex-start',
-                      position: 'relative'
-                    }}
-                  >
-                    <div style={{ fontWeight: 'bold', fontSize: 20, marginBottom: 8 }}>{room.name}</div>
-                    <div style={{ fontSize: 15, marginBottom: 8 }}>
-                      <span style={{ color: '#27ae60', fontWeight: 'bold' }}>ID:</span> {room.id}
+                  <div key={room.id} className="room-card">
+                    <div className="room-card-title">{room.name}</div>
+                    <div className="room-card-info">
+                      <span>ID:</span> {room.id}
                     </div>
-                    <div style={{ fontSize: 15, marginBottom: 8 }}>
-                      <span style={{ color: '#27ae60', fontWeight: 'bold' }}>Gracze:</span>{' '}
+                    <div className="room-card-info">
+                      <span>Gracze:</span>{' '}
                       {Array.isArray(room.players)
                         ? room.players.join(', ')
                         : (room.players || 1)}
                     </div>
                     <button
-                      style={{
-                        marginTop: 'auto',
-                        width: '100%',
-                        background: Array.isArray(room.players) && room.players.length >= 2 ? '#555' : '#27ae60',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: 6,
-                        padding: '0.7rem',
-                        fontWeight: 'bold',
-                        cursor: Array.isArray(room.players) && room.players.length >= 2 ? 'not-allowed' : 'pointer'
-                      }}
+                      className="room-card-btn"
                       disabled={Array.isArray(room.players) && room.players.length >= 2}
                       title={Array.isArray(room.players) && room.players.length >= 2 ? 'Pokój pełny' : 'Dołącz do pokoju'}
                       onClick={() => handleJoinRoom(room.id)}
@@ -204,17 +132,17 @@ export default function RoomsView({ onBack, setToast, username }) {
                 ))
               )}
             </div>
-            <form onSubmit={handleCreateRoom} style={{ display: 'flex', gap: 8, marginBottom: 16, width: '100%' }}>
+            <form onSubmit={handleCreateRoom} className="rooms-create-form">
               <input
                 type="text"
                 placeholder="Nazwa nowego pokoju"
                 value={newRoomName}
                 onChange={e => setNewRoomName(e.target.value)}
-                style={{ flex: 1 }}
+                className="rooms-create-input"
               />
               <button type="submit">Utwórz pokój</button>
             </form>
-            <button style={{ marginTop: 8 }} onClick={onBack}>Powrót</button>
+            <button className="rooms-back-btn" onClick={onBack}>Powrót</button>
           </>
         )}
       </div>

@@ -66,94 +66,73 @@ export default function ProfileView({ username, setToast }) {
   if (!user) return <div className="game-info">Nie znaleziono użytkownika</div>
 
   return (
-    <div
-      className="game-info"
-      style={{
-        maxWidth: 700,
-        width: '90vw',
-        margin: '32px auto',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-        minHeight: 500
-      }}
-    >
-      <div style={{
-        width: '100%',
-        background: '#23272a',
-        borderRadius: 16,
-        padding: 40,
-        boxShadow: '0 4px 32px #000a',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 32
-      }}>
-        <h1 style={{ marginTop: 0, marginBottom: 16, textAlign: 'center' }}>Profil użytkownika</h1>
-        <div style={{ marginBottom: 0, fontSize: 18 }}>
+    <div className="game-info profile-container">
+      <div className="profile-content">
+        <h1>Profil użytkownika</h1>
+        <div className="profile-info">
           <b>Nazwa użytkownika:</b> {user.username}<br />
           <b>Email:</b> {user.email || '-'}<br />
           <b>Zarejestrowany:</b> {user.createdAt ? new Date(user.createdAt).toLocaleString() : '-'}
         </div>
-        <div style={{ marginBottom: 0, fontSize: 18 }}>
+        <div className="profile-info">
           <b>Statystyki:</b><br />
           Rozegrane gry: {user.stats?.games ?? 0}<br />
           Wygrane: {user.stats?.wins ?? 0}<br />
           Przegrane: {user.stats?.losses ?? 0}
         </div>
         {!edit && (
-          <button onClick={() => setEdit(true)} style={{
-            width: '100%',
-            padding: '12px 0',
-            fontSize: 16,
-            background: '#27ae60',
-            color: '#fff',
-            border: 'none',
-            borderRadius: 8,
-            fontWeight: 'bold',
-            cursor: 'pointer'
-          }}>Edytuj profil</button>
+          <button
+            onClick={() => setEdit(true)}
+            className="profile-edit-btn save"
+          >Edytuj profil</button>
         )}
         {edit && (
-          <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <label style={{ fontSize: 16 }}>
+          <form onSubmit={handleSave} className="profile-edit-form">
+            <label className="profile-edit-label">
               Nazwa użytkownika (po zmiane nazwy konieczne zalogowanie się ponownie):
-              <input name="username" value={form.username} onChange={handleChange} required style={{ width: '100%', marginTop: 4 }} />
+              <input
+                name="username"
+                value={form.username}
+                onChange={handleChange}
+                required
+                className="profile-edit-input"
+              />
             </label>
-            <label style={{ fontSize: 16 }}>
+            <label className="profile-edit-label">
               Email:
-              <input name="email" value={form.email} onChange={handleChange} type="email" required style={{ width: '100%', marginTop: 4 }} />
+              <input
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                type="email"
+                required
+                className="profile-edit-input"
+              />
             </label>
-            <label style={{ fontSize: 16 }}>
+            <label className="profile-edit-label">
               Aktualne hasło:
-              <input name="password" value={form.password} onChange={handleChange} type="password" required style={{ width: '100%', marginTop: 4 }} />
+              <input
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                type="password"
+                required
+                className="profile-edit-input"
+              />
             </label>
-            <label style={{ fontSize: 16 }}>
+            <label className="profile-edit-label">
               Nowe hasło:
-              <input name="newPassword" value={form.newPassword} onChange={handleChange} type="password" style={{ width: '100%', marginTop: 4 }} />
+              <input
+                name="newPassword"
+                value={form.newPassword}
+                onChange={handleChange}
+                type="password"
+                className="profile-edit-input"
+              />
             </label>
-            <div style={{ display: 'flex', gap: 10 }}>
-              <button type="submit" style={{
-                flex: 1,
-                padding: '10px 0',
-                background: '#27ae60',
-                color: '#fff',
-                border: 'none',
-                borderRadius: 8,
-                fontWeight: 'bold',
-                fontSize: 16,
-                cursor: 'pointer'
-              }}>Zapisz</button>
-              <button type="button" onClick={handleCancel} style={{
-                flex: 1,
-                padding: '10px 0',
-                background: '#c0392b',
-                color: '#fff',
-                border: 'none',
-                borderRadius: 8,
-                fontWeight: 'bold',
-                fontSize: 16,
-                cursor: 'pointer'
-              }}>Anuluj</button>
+            <div className="profile-edit-btn-row">
+              <button type="submit" className="profile-edit-btn save">Zapisz</button>
+              <button type="button" onClick={handleCancel} className="profile-edit-btn cancel">Anuluj</button>
             </div>
           </form>
         )}

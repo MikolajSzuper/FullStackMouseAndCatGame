@@ -6,8 +6,10 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-mongoose.connect('mongodb://localhost:27017/cat_and_mouse').then(() => {
-  console.log('Połączono z MongoDB')
+const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/cat_and_mouse'
+
+mongoose.connect(mongoUrl).then(() => {
+  console.log('Połączono z MongoDB:', mongoUrl)
 }).catch(err => {
   console.error('Błąd połączenia z MongoDB:', err)
 })
