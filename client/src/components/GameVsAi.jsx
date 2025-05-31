@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import '../GameCommon.css'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+
 const nodes = [
   { id: 0, x: 200, y: 50 },   // mysz start
   { id: 1, x: 80, y: 180 },
@@ -131,7 +133,7 @@ export default function GameVsAi({ onBack, username }) {
   // Wyślij wynik do serwera po zakończeniu gry
   useEffect(() => {
     if (!winner || !username) return
-    fetch('http://localhost:5000/api/result', {
+    fetch(`${API_URL}/api/result`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

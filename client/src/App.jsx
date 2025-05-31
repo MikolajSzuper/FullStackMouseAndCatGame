@@ -9,6 +9,8 @@ import ProfileView from './components/ProfileView'
 import StatsView from './components/StatsView'
 import './App.css'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [showRegister, setShowRegister] = useState(false)
@@ -19,7 +21,7 @@ export default function App() {
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (token) {
-      fetch('http://localhost:5000/api/me', {
+      fetch(`${API_URL}/api/me`, {
         headers: { Authorization: `Bearer ${token}` }
       })
         .then(res => res.ok ? res.json() : Promise.reject())
@@ -49,7 +51,7 @@ export default function App() {
         <div className="auth-bg">
           <div className="auth-container">
             {showRegister ? (
-              <RegisterForm onSuccess={(username) => {setIsAuthenticated(true), setUsername(username)}} setToast={setToast} />
+              <RegisterForm onSuccess={(username) => { setIsAuthenticated(true); setUsername(username) }} setToast={setToast} />
             ) : (
               <LoginForm onSuccess={(username) => { setIsAuthenticated(true); setUsername(username); }} setToast={setToast} />
             )}
@@ -75,8 +77,8 @@ export default function App() {
     content = <MainView username={username} setToast={setToast} />
   } else if (activeView === 'stats') {
     content = <StatsView />
-  }else if (activeView === 'profile') {
-  content = <ProfileView username={username} setToast={setToast} />
+  } else if (activeView === 'profile') {
+    content = <ProfileView username={username} setToast={setToast} />
   } else if (activeView === 'help') {
     content = <HelpView />
   }

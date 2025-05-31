@@ -1,12 +1,14 @@
 import { useState } from 'react'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+
 export default function LoginForm({ onSuccess, setToast }) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const res = await fetch('http://localhost:5000/api/login', {
+    const res = await fetch(`${API_URL}/api/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
@@ -15,7 +17,7 @@ export default function LoginForm({ onSuccess, setToast }) {
     if (res.ok) {
       localStorage.setItem('token', data.token)
       setToast({ message: 'Zalogowano pomyślnie!', type: 'success' })
-      fetch('http://localhost:5000/api/me', {
+      fetch(`${API_URL}/api/me`, {
         headers: { Authorization: `Bearer ${data.token}` }
       })
         .then(res => res.json())

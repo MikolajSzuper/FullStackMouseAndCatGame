@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+
 export default function ProfileView({ username, setToast }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -8,7 +10,7 @@ export default function ProfileView({ username, setToast }) {
 
   useEffect(() => {
     const token = localStorage.getItem('token')
-    fetch('http://localhost:5000/api/me', {
+    fetch(`${API_URL}/api/me`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -31,7 +33,7 @@ export default function ProfileView({ username, setToast }) {
     e.preventDefault()
     const token = localStorage.getItem('token')
     try {
-      const res = await fetch('http://localhost:5000/api/me', {
+      const res = await fetch(`${API_URL}/api/me`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({

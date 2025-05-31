@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+
 export default function StatsView() {
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/stats')
+    fetch(`${API_URL}/api/stats`)
       .then(res => res.json())
       .then(setStats)
       .finally(() => setLoading(false))
