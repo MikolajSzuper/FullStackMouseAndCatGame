@@ -31,7 +31,12 @@ exports.me = async (req, res) => {
     const decoded = jwt.verify(auth.split(' ')[1], JWT_SECRET)
     const user = await User.findOne({ username: decoded.username })
     if (!user) return res.status(404).json({ error: 'Nie znaleziono użytkownika' })
-    res.json({ username: user.username, email: user.email, stats: user.stats })
+    res.json({
+      username: user.username,
+      email: user.email,
+      stats: user.stats,
+      createdAt: user.createdAt
+    })
   } catch {
     res.status(401).json({ error: 'Nieprawidłowy token' })
   }
