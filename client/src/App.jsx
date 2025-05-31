@@ -4,6 +4,7 @@ import RegisterForm from './components/RegisterForm'
 import Sidebar from './components/Sidebar'
 import MainView from './components/MainView'
 import Toast from './components/Toast'
+import HelpView from './components/HelpView'
 import './App.css'
 
 export default function App() {
@@ -74,6 +75,8 @@ export default function App() {
     content = <div>Statystyki</div>
   } else if (activeView === 'profile') {
     content = <div>Profil użytkownika</div>
+  } else if (activeView === 'help') {
+    content = <HelpView />
   }
 
   return (

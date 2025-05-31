@@ -9,11 +9,16 @@ export default function RoomsView({ onBack, setToast, username }) {
 
   useEffect(() => {
     const savedRoomId = localStorage.getItem('roomId')
+    const token = localStorage.getItem('token')
     if (savedRoomId) {
       setJoinedRoomId(savedRoomId)
       return
     }
-    fetch('http://localhost:5000/api/rooms')
+    fetch('http://localhost:5000/api/rooms', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
       .then(res => res.json())
       .then(setRooms)
       .finally(() => setLoading(false))
@@ -25,9 +30,13 @@ export default function RoomsView({ onBack, setToast, username }) {
       setToast({ message: 'Podaj nazwę pokoju', type: 'error' })
       return
     }
+    const token = localStorage.getItem('token')
     const res = await fetch('http://localhost:5000/api/rooms', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       body: JSON.stringify({ name: newRoomName, username }),
     })
     if (res.ok) {
@@ -41,9 +50,13 @@ export default function RoomsView({ onBack, setToast, username }) {
   }
 
   const handleJoinRoom = async (roomId) => {
+    const token = localStorage.getItem('token')
     const res = await fetch(`http://localhost:5000/api/rooms/${roomId}/join`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       body: JSON.stringify({ username }),
     })
     if (res.ok) {
@@ -56,7 +69,12 @@ export default function RoomsView({ onBack, setToast, username }) {
 
   const refreshRooms = () => {
     setLoading(true)
-    fetch('http://localhost:5000/api/rooms')
+    const token = localStorage.getItem('token')
+    fetch('http://localhost:5000/api/rooms', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
       .then(res => res.json())
       .then(setRooms)
       .finally(() => setLoading(false))
@@ -68,7 +86,7 @@ export default function RoomsView({ onBack, setToast, username }) {
 
   return (
     <div className="game-info">
-            <h1 style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <h1 style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         Dostępne pokoje
         <button
           style={{
@@ -103,7 +121,7 @@ export default function RoomsView({ onBack, setToast, username }) {
             marginBottom: 32,
             width: '100%',
           }}>
-            {rooms.length === 0 ? (
+            {(Array.isArray(rooms) ? rooms : []).length === 0 ? (
               <div style={{
                 color: '#aaa',
                 fontSize: 18,
@@ -114,7 +132,7 @@ export default function RoomsView({ onBack, setToast, username }) {
                 Brak dostępnych pokoi.<br />Załóż własny pokój i zaproś znajomego do gry!
               </div>
             ) : (
-              rooms.map(room => (
+              (Array.isArray(rooms) ? rooms : []).map(room => (
                 <div
                   key={room.id}
                   style={{

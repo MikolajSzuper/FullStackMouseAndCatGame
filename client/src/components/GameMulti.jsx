@@ -33,8 +33,11 @@ export default function GameMulti({ roomId, username, onBack }) {
 
   // Polling na stan pokoju i gry
   useEffect(() => {
+    const token = localStorage.getItem('token')
     const interval = setInterval(() => {
-      fetch(`http://localhost:5000/api/rooms/${roomId}`)
+      fetch(`http://localhost:5000/api/rooms/${roomId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
         .then(res => res.json())
         .then(data => {
           setRoom(data)
@@ -63,7 +66,9 @@ export default function GameMulti({ roomId, username, onBack }) {
         })
     }, 1000)
     // pobierz od razu na start
-    fetch(`http://localhost:5000/api/rooms/${roomId}`)
+    fetch(`http://localhost:5000/api/rooms/${roomId}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
       .then(res => res.json())
       .then(data => {
         setRoom(data)
@@ -97,9 +102,10 @@ export default function GameMulti({ roomId, username, onBack }) {
       if (!room.game || (room.rematchVotes && room.rematchVotes.length === 2)) {
         // tylko pierwszy gracz inicjuje grę
         if (room.players[0] === username) {
+          const token = localStorage.getItem('token')
           fetch(`http://localhost:5000/api/rooms/${roomId}/game`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
             body: JSON.stringify({
               mousePos: 0,
               catPos: 5,
@@ -108,10 +114,9 @@ export default function GameMulti({ roomId, username, onBack }) {
               moveCount: 0
             })
           }).then(() => {
-            // wyczyść rematchVotes po starcie nowej gry
             fetch(`http://localhost:5000/api/rooms/${roomId}/rematch`, {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
               body: JSON.stringify({ reset: true })
             })
           })
@@ -124,10 +129,11 @@ export default function GameMulti({ roomId, username, onBack }) {
 
   const handleMove = async (to) => {
     if (!game || game.winner) return
+    const token = localStorage.getItem('token')
     if (role === 'mouse' && game.turn === 'mouse' && isNeighbor(game.mousePos, to) && to !== game.catPos) {
       await fetch(`http://localhost:5000/api/rooms/${roomId}/game`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({
           ...game,
           mousePos: to,
@@ -140,7 +146,7 @@ export default function GameMulti({ roomId, username, onBack }) {
       if ((game.moveCount + 1) >= 15) {
         await fetch(`http://localhost:5000/api/rooms/${roomId}/result`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
           body: JSON.stringify({ winner: 'mouse' })
         })
       }
@@ -154,7 +160,7 @@ export default function GameMulti({ roomId, username, onBack }) {
       if (allDanger || to === game.mousePos) winner = 'cat'
       await fetch(`http://localhost:5000/api/rooms/${roomId}/game`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({
           ...game,
           catPos: to,
@@ -166,7 +172,7 @@ export default function GameMulti({ roomId, username, onBack }) {
       if (winner) {
         await fetch(`http://localhost:5000/api/rooms/${roomId}/result`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
           body: JSON.stringify({ winner: 'cat' })
         })
       }
@@ -174,9 +180,10 @@ export default function GameMulti({ roomId, username, onBack }) {
   }
 
   const handleLeave = async () => {
+    const token = localStorage.getItem('token')
     await fetch(`http://localhost:5000/api/rooms/${roomId}/leave`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({ username }),
     })
     setLeft(true)
@@ -186,9 +193,10 @@ export default function GameMulti({ roomId, username, onBack }) {
 
   const handleRematch = async () => {
     setRematch(true)
+    const token = localStorage.getItem('token')
     await fetch(`http://localhost:5000/api/rooms/${roomId}/rematch`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({ username })
     })
   }
