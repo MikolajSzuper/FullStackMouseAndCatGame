@@ -44,6 +44,27 @@ app.post('/api/rooms/:id/join', (req, res) => {
   res.json(room)
 })
 
+app.post('/api/rooms/:id/result', (req, res) => {
+  const room = rooms.find(r => r.id === req.params.id)
+  if (!room) return res.status(404).json({ error: 'Pokój nie istnieje' })
+  room.lastWinner = req.body.winner
+  res.json({ ok: true })
+})
+
+app.post('/api/rooms/:id/rematch', (req, res) => {
+  const room = rooms.find(r => r.id === req.params.id)
+  if (!room) return res.status(404).json({ error: 'Pokój nie istnieje' })
+  if (req.body.reset) {
+    room.rematchVotes = []
+    return res.json({ ok: true })
+  }
+  if (!room.rematchVotes) room.rematchVotes = []
+  if (!room.rematchVotes.includes(req.body.username)) {
+    room.rematchVotes.push(req.body.username)
+  }
+  res.json({ votes: room.rematchVotes })
+})
+
 // Zmień tworzenie pokoju, aby dodać username:
 app.post('/api/rooms', (req, res) => {
   const { name, username } = req.body
@@ -65,7 +86,25 @@ app.post('/api/rooms/:id/leave', (req, res) => {
     rooms = rooms.filter(r => r.id !== req.params.id)
     return res.json({ message: 'Pokój usunięty' })
   }
+  // Jeśli został tylko jeden gracz, zresetuj grę i rematchVotes
+  if (room.players.length < 2) {
+    room.game = null
+    room.rematchVotes = []
+  }
   res.json({ message: 'Gracz opuścił pokój' })
+})
+
+app.get('/api/rooms/:id/game', (req, res) => {
+  const room = rooms.find(r => r.id === req.params.id)
+  if (!room) return res.status(404).json({ error: 'Pokój nie istnieje' })
+  res.json(room.game || null)
+})
+
+app.post('/api/rooms/:id/game', (req, res) => {
+  const room = rooms.find(r => r.id === req.params.id)
+  if (!room) return res.status(404).json({ error: 'Pokój nie istnieje' })
+  room.game = req.body
+  res.json(room.game)
 })
 
 app.post('/api/register', async (req, res) => {
