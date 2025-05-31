@@ -33,7 +33,7 @@ export default function RegisterForm({ onSuccess, setToast }) {
       if (loginRes.ok) {
         localStorage.setItem('token', loginData.token)
         setToast({ message: 'Konto utworzone i zalogowano!', type: 'success' })
-        onSuccess()
+        onSuccess(username) 
       } else {
         setToast({ message: 'Rejestracja udana, ale logowanie nie powiodło się.', type: 'error' })
       }

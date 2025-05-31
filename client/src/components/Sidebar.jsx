@@ -37,6 +37,12 @@ export default function Sidebar({ username, avatarUrl, onSelect, onLogout }) {
         Profil
       </button>
       <button
+        className={active === 'help' ? 'sidebar-btn active' : 'sidebar-btn'}
+        onClick={() => handleSelect('help')}
+      >
+        Pomoc
+      </button>
+      <button
         className="sidebar-btn"
         style={{ marginTop: 'auto',textAlign: 'center', background: '#c0392b' }}
         onClick={onLogout}

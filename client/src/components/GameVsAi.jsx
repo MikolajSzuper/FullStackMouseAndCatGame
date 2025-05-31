@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import '../GameCommon.css'
 
 const nodes = [
   { id: 0, x: 200, y: 50 },   // mysz start
@@ -29,7 +30,7 @@ function getCatMoveRandom(catPos, mousePos) {
   return neighbors[idx].id
 }
 
-export default function GameVsAi({ onBack }) {
+export default function GameVsAi({ onBack, username }) {
   // Losowanie ról na początku gry
   const [playerRole, setPlayerRole] = useState(null) // 'mouse' lub 'cat'
   const [mousePos, setMousePos] = useState(0)
@@ -127,6 +128,20 @@ export default function GameVsAi({ onBack }) {
     }
   }, [turn, playerRole, catPos, mousePos, winner])
 
+  // Wyślij wynik do serwera po zakończeniu gry
+  useEffect(() => {
+    if (!winner || !username) return
+    fetch('http://localhost:5000/api/result', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username,
+        mode: 'vs_ai',
+        result: winner === playerRole ? 'win' : 'lose'
+      })
+    })
+  }, [winner, username, playerRole])
+
   let info = ''
   if (playerRole === null) {
     info = 'Losowanie ról...'
@@ -137,10 +152,10 @@ export default function GameVsAi({ onBack }) {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div className="game-container">
       <h1>Kot i Mysz (vs Komputer)</h1>
-      <div style={{ marginBottom: 12, fontWeight: 'bold', fontSize: 20 }}>{info}</div>
-      <svg width={600} height={600} style={{ background: 'mediumseagreen', borderRadius: 16 }}>
+      <div className="game-role-info">{info}</div>
+      <svg width={600} height={600} className="game-board">
         {edges.map(([a, b], i) => (
           <line
             key={i}
@@ -185,14 +200,14 @@ export default function GameVsAi({ onBack }) {
           )
         })}
       </svg>
-      <div style={{ marginTop: 24 }}>
+      <div className="game-status">
         {winner
           ? winner === 'mouse'
             ? 'Wygrała mysz! 🐭'
             : 'Wygrał kot! 🐱'
           : `Tura: ${turn === 'mouse' ? 'mysz' : 'kot'} | Ruch: ${moveCount}/15`}
       </div>
-      <div style={{ display: 'flex', gap: 16, marginTop: 20 }}>
+      <div className="game-buttons">
         <button onClick={restartGame}>Restart</button>
         <button onClick={onBack}>Powrót</button>
       </div>

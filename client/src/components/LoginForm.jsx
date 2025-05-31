@@ -15,14 +15,18 @@ export default function LoginForm({ onSuccess, setToast }) {
     if (res.ok) {
       localStorage.setItem('token', data.token)
       setToast({ message: 'Zalogowano pomyślnie!', type: 'success' })
-      onSuccess()
+      fetch('http://localhost:5000/api/me', {
+        headers: { Authorization: `Bearer ${data.token}` }
+      })
+        .then(res => res.json())
+        .then(userData => onSuccess(userData.username))
     } else {
       setToast({ message: data.error, type: 'error' })
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ width: '100%', height: '100%' }}>
+    <form onSubmit={handleSubmit} className="login-form">
       <h2>Zaloguj się</h2>
       <label htmlFor="login-username" className="input-label">Nazwa użytkownika</label>
       <input

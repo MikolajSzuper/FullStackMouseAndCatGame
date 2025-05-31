@@ -4,6 +4,9 @@ import RegisterForm from './components/RegisterForm'
 import Sidebar from './components/Sidebar'
 import MainView from './components/MainView'
 import Toast from './components/Toast'
+import HelpView from './components/HelpView'
+import ProfileView from './components/ProfileView'
+import StatsView from './components/StatsView'
 import './App.css'
 
 export default function App() {
@@ -46,9 +49,9 @@ export default function App() {
         <div className="auth-bg">
           <div className="auth-container">
             {showRegister ? (
-              <RegisterForm onSuccess={() => setIsAuthenticated(true)} setToast={setToast} />
+              <RegisterForm onSuccess={(username) => {setIsAuthenticated(true), setUsername(username)}} setToast={setToast} />
             ) : (
-              <LoginForm onSuccess={() => setIsAuthenticated(true)} setToast={setToast} />
+              <LoginForm onSuccess={(username) => { setIsAuthenticated(true); setUsername(username); }} setToast={setToast} />
             )}
             <button
               className="toggle-btn"
@@ -71,9 +74,11 @@ export default function App() {
   if (activeView === 'main') {
     content = <MainView username={username} setToast={setToast} />
   } else if (activeView === 'stats') {
-    content = <div>Statystyki</div>
-  } else if (activeView === 'profile') {
-    content = <div>Profil użytkownika</div>
+    content = <StatsView />
+  }else if (activeView === 'profile') {
+  content = <ProfileView username={username} setToast={setToast} />
+  } else if (activeView === 'help') {
+    content = <HelpView />
   }
 
   return (
