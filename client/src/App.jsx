@@ -5,6 +5,8 @@ import Sidebar from './components/Sidebar'
 import MainView from './components/MainView'
 import Toast from './components/Toast'
 import HelpView from './components/HelpView'
+import ProfileView from './components/ProfileView'
+import StatsView from './components/StatsView'
 import './App.css'
 
 export default function App() {
@@ -72,9 +74,9 @@ export default function App() {
   if (activeView === 'main') {
     content = <MainView username={username} setToast={setToast} />
   } else if (activeView === 'stats') {
-    content = <div>Statystyki</div>
-  } else if (activeView === 'profile') {
-    content = <div>Profil użytkownika</div>
+    content = <StatsView />
+  }else if (activeView === 'profile') {
+  content = <ProfileView username={username} setToast={setToast} />
   } else if (activeView === 'help') {
     content = <HelpView />
   }
