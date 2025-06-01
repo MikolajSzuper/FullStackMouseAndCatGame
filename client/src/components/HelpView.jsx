@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function HelpView() {
   return (
-    <div className="game-info help-container">
+    <div className="help-container">
       <div className="help-content">
         <h1>Jak grać w "Kot i Mysz"?</h1>
         <p>

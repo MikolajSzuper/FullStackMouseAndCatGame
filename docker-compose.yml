@@ -21,7 +21,10 @@ services:
       - mongo
 
   client:
-    build: ./client
+    build:
+      context: ./client
+      args:
+        - VITE_API_URL=http://server:5000
     container_name: client
     restart: always
     ports:
