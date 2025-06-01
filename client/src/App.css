@@ -732,3 +732,37 @@ button:hover {
     font-size: 16px;
   }
 }
+
+.mainview-container {
+  max-width: 800px;
+  width: 98vw;
+  margin: 40px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 500px;
+}
+.mainview-inner {
+  width: 100%;
+  background: #23272a;
+  border-radius: 20px;
+  padding: 60px;
+  box-shadow: 0 6px 36px #000b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+.mainview-title {
+  margin-top: 0;
+  margin-bottom: 32px;
+  text-align: center;
+  font-size: 32px;
+}
+.mainview-btnrow {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 24px;
+}

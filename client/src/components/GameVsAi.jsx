@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
 import '../GameCommon.css'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
-
 const nodes = [
   { id: 0, x: 200, y: 50 },   // mysz start
   { id: 1, x: 80, y: 180 },
@@ -66,11 +64,6 @@ export default function GameVsAi({ onBack, username }) {
       setMousePos(to)
       setMoveCount(c => {
         const next = c + 1
-        // Sprawdź czy mysz jest sąsiadem kota po ruchu
-        if (isNeighbor(to, catPos)) {
-          setWinner('cat')
-          return next
-        }
         if (next >= 15) {
           setWinner('mouse')
           return next
@@ -78,7 +71,6 @@ export default function GameVsAi({ onBack, username }) {
         setTurn('cat')
         return next
       })
-      return
     }
     if (playerRole === 'cat' && turn === 'cat' && isNeighbor(catPos, to) && to !== mousePos) {
       setCatPos(to)
@@ -124,11 +116,6 @@ export default function GameVsAi({ onBack, username }) {
           setMousePos(move.id)
           setMoveCount(c => {
             const next = c + 1
-            // Sprawdź czy AI-mysz po ruchu jest sąsiadem kota
-            if (isNeighbor(move.id, catPos)) {
-              setWinner('cat')
-              return next
-            }
             if (next >= 15) {
               setWinner('mouse')
               return next
@@ -144,7 +131,7 @@ export default function GameVsAi({ onBack, username }) {
   // Wyślij wynik do serwera po zakończeniu gry
   useEffect(() => {
     if (!winner || !username) return
-    fetch(`${API_URL}/api/result`, {
+    fetch('http://localhost:5000/api/result', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
