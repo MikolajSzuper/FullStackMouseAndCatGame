@@ -3,14 +3,14 @@ db = db.getSiblingDB('cat_and_mouse');
 const users = [
   {
     username: "Iza",
-    password: "$2a$10$$2a$10$wqjQwQyQn8wQwQyQn8wQwOQwQyQn8wQwQyQn8wQwQyQn8wQwQyQn8W", // bcrypt hash
+    password: "$2b$10$DzVgisk9zibrZYTqdULFleS0wfpwgpPKl7MSwFrj/9uW/VQJucCrO", // bcrypt hash
     email: "alice@example.com",
     stats: { games: 10, wins: 7, losses: 3 },
     createdAt: new Date()
   },
   {
     username: "Rysiek",
-    password: "$2a$10$$2a$10$wqjQwQyQn8wQwQyQn8wQwOQwQyQn8wQwQyQn8wQwQyQn8wQwQyQn8W", // bcrypt hash
+    password: "$2b$10$DzVgisk9zibrZYTqdULFleS0wfpwgpPKl7MSwFrj/9uW/VQJucCrO", // bcrypt hash
     email: "bob@example.com",
     stats: { games: 8, wins: 3, losses: 5 },
     createdAt: new Date()
