@@ -13,14 +13,14 @@ export default function StatsView() {
       .finally(() => setLoading(false))
   }, [])
 
-  if (loading) return <div className="game-info">Ładowanie statystyk...</div>
-  if (!stats) return <div className="game-info">Brak danych statystycznych</div>
+  if (loading) return <div className="stats-info">Ładowanie statystyk...</div>
+  if (!stats) return <div className="stats-info">Brak danych statystycznych</div>
 
   const maxWins = Math.max(...stats.topWinners.map(u => u.stats.wins), 1)
   return (
     <div className="stats-container">
       <div
-        className="game-info"
+        className="stats-info"
         style={{
           maxWidth: 1200,
           width: '100%',
@@ -31,6 +31,7 @@ export default function StatsView() {
           justifyContent: 'center',
           alignItems: 'stretch',
           minHeight: 400,
+          paddingBottom: 32,
         }}
       >
         {/* Kafelek 1: Wykres */}

@@ -68,7 +68,7 @@ export default function ProfileView({ username, setToast }) {
   if (!user) return <div className="game-info">Nie znaleziono użytkownika</div>
 
   return (
-    <div className="game-info profile-container">
+    <div className="profile-container">
       <div className="profile-content">
         <h1>Profil użytkownika</h1>
         <div className="profile-info">
