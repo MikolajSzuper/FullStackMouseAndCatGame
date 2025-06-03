@@ -103,11 +103,10 @@
   max-width: 300px;
 }
 .game-rematch-info {
-  margin-top: 12px;
   color: #27ae60;
   font-weight: bold;
   text-align: center;
-  width: 600px;
+  width: 260px;
 }
 
 @media (max-width: 900px) {
