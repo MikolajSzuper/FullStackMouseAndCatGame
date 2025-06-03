@@ -41,7 +41,16 @@ export default function GameMulti({ roomId, username, onBack }) {
       fetch(`${API_URL}/api/rooms/${roomId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
-        .then(res => res.json())
+        .then(async res => {
+        if (!res.ok) {
+          if (res.status === 400 || res.status === 404) {
+            localStorage.removeItem('roomId')
+            if (onBack) onBack()
+          }
+          throw new Error('Pokój nie istnieje lub błąd')
+        }
+        return res.json()
+        })
         .then(data => {
           setRoom(data)
           setLoading(false)
@@ -203,6 +212,13 @@ export default function GameMulti({ roomId, username, onBack }) {
       body: JSON.stringify({ username })
     })
   }
+
+  useEffect(() => {
+    if (Array.isArray(room?.players)) {
+      if (room.players[0] === username) setRole('mouse')
+      else if (room.players[1] === username) setRole('cat')
+    }
+  }, [room?.players, username])
 
   if (loading) return <div className="game-info">Ładowanie pokoju...</div>
   if (left) return null

@@ -33,12 +33,14 @@ export default function App() {
           setIsAuthenticated(false)
           setUsername('')
           localStorage.removeItem('token')
+          localStorage.removeItem('roomId')
         })
     }
   }, [])
 
   const handleLogout = () => {
     localStorage.removeItem('token')
+    localStorage.removeItem('roomId')
     setShowRegister(false)
     setIsAuthenticated(false)
     setUsername('')

@@ -112,6 +112,9 @@ exports.rematch = (req, res) => {
   const room = rooms.find(r => r.id === req.params.id)
   if (!room) return res.status(404).json({ error: 'Pokój nie istnieje' })
   if (req.body.reset) {
+    if (room.players && room.players.length === 2) {
+      room.players = [room.players[1], room.players[0]]
+    }
     room.rematchVotes = []
     return res.json({ ok: true })
   }
