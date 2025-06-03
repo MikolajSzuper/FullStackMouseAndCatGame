@@ -78,8 +78,8 @@ node index.js    # uruchom backend lokalnie na http://localhost:5000
 ## 👤 Przykładowi użytkownicy
 
 Po starcie dostępni są m.in.:
-- `Jan` / `password`
-- `Andrzej` / `password`
+- `Jan` / `test`
+- `Robert` / `test`
 - oraz kilkudziesięciu innych testowych użytkowników (patrz [`mongo-init.js`](mongo-init.js))
 
 ---

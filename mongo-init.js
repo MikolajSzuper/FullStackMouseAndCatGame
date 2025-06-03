@@ -2,17 +2,17 @@ db = db.getSiblingDB('cat_and_mouse');
 
 const users = [
   {
-    username: "Iza",
+    username: "Jan",
     password: "$2b$10$DzVgisk9zibrZYTqdULFleS0wfpwgpPKl7MSwFrj/9uW/VQJucCrO", // bcrypt hash
     email: "alice@example.com",
-    stats: { games: 10, wins: 7, losses: 3 },
+    stats: { games: 20, wins: 17, losses: 3 },
     createdAt: new Date()
   },
   {
-    username: "Rysiek",
+    username: "Robert",
     password: "$2b$10$DzVgisk9zibrZYTqdULFleS0wfpwgpPKl7MSwFrj/9uW/VQJucCrO", // bcrypt hash
     email: "bob@example.com",
-    stats: { games: 8, wins: 3, losses: 5 },
+    stats: { games: 37, wins: 32, losses: 5 },
     createdAt: new Date()
   }
 ];
@@ -49,7 +49,7 @@ const realNames = [
 realNames.forEach(person => {
   users.push({
     username: person.username,
-    password: "$2a$10$7Qw3Qw3Qw3Qw3Qw3Qw3QwOQw3Qw3Qw3Qw3Qw3Qw3Qw3Qw3Qw3Qw3Q", // bcrypt hash
+    password: "$2b$10$DzVgisk9zibrZYTqdULFleS0wfpwgpPKl7MSwFrj/9uW/VQJucCrO", // bcrypt hash
     email: person.email,
     stats: {
       games: Math.floor(Math.random() * 30) + 1,
