@@ -329,6 +329,15 @@ button:hover {
   display: flex;
   align-items: center;
 }
+
+.rooms-refresh-btn:hover,
+.rooms-refresh-btn:active,
+.rooms-refresh-btn:focus {
+  background: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  color: inherit;
+}
 .rooms-refresh-btn:disabled {
   cursor: not-allowed;
 }

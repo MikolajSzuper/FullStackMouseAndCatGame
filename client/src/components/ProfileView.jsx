@@ -64,6 +64,27 @@ export default function ProfileView({ username, setToast }) {
     setToast({ message: '', type: '' })
   }
 
+  const handleDelete = async () => {
+    if (!window.confirm('Czy na pewno chcesz usunąć swoje konto? Tej operacji nie można cofnąć!')) return
+    const token = localStorage.getItem('token')
+    try {
+      const res = await fetch(`${API_URL}/api/me`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      if (res.ok) {
+        setToast({ message: 'Konto zostało usunięte', type: 'success' })
+        localStorage.removeItem('token')
+        window.location.reload()
+      } else {
+        const data = await res.json()
+        setToast({ message: data.error || 'Błąd usuwania konta', type: 'error' })
+      }
+    } catch {
+      setToast({ message: 'Błąd połączenia z serwerem', type: 'error' })
+    }
+  }
+
   if (loading) return <div className="game-info">Ładowanie profilu...</div>
   if (!user) return <div className="game-info">Nie znaleziono użytkownika</div>
 
@@ -83,10 +104,17 @@ export default function ProfileView({ username, setToast }) {
           Przegrane: {user.stats?.losses ?? 0}
         </div>
         {!edit && (
-          <button
-            onClick={() => setEdit(true)}
-            className="profile-edit-btn save"
-          >Edytuj profil</button>
+          <>
+            <button
+              onClick={() => setEdit(true)}
+              className="profile-edit-btn save"
+            >Edytuj profil</button>
+            <button
+              onClick={handleDelete}
+              className="profile-edit-btn cancel"
+              style={{ marginTop: 12, background: '#c0392b' }}
+            >Usuń konto</button>
+          </>
         )}
         {edit && (
           <form onSubmit={handleSave} className="profile-edit-form">

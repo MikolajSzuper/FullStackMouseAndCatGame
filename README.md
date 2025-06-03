@@ -7,7 +7,7 @@ Projekt oparty o **React + Vite** (frontend), **Express + MongoDB** (backend), g
 
 ## 🖥️ Demo
 
-- **Frontend:** http://localhost:3000  
+- **Frontend:** http://localhost:80  
 - **Backend API:** http://localhost:5000  
 - **MongoDB:** localhost:27017
 
@@ -17,8 +17,8 @@ Projekt oparty o **React + Vite** (frontend), **Express + MongoDB** (backend), g
 
 1. **Sklonuj repozytorium:**
    ```sh
-   git clone https://github.com/twoj-login/kot-i-mysz.git
-   cd kot-i-mysz
+   git clone https://github.com/MikolajSzuper/FullStackMouseAndCatGame.git
+   cd FullStackMouseAndCatGame
    ```
 
 2. **Uruchom całość:**
@@ -27,7 +27,7 @@ Projekt oparty o **React + Vite** (frontend), **Express + MongoDB** (backend), g
    ```
 
 3. **Otwórz przeglądarkę:**  
-   http://localhost:3000
+   http://localhost
 
 > **Uwaga:** Przy każdym uruchomieniu baza MongoDB jest inicjalizowana przykładowymi użytkownikami z pliku [`mongo-init.js`](mongo-init.js).
 
@@ -80,7 +80,7 @@ node index.js    # uruchom backend lokalnie na http://localhost:5000
 Po starcie dostępni są m.in.:
 - `Jan` / `test`
 - `Robert` / `test`
-- oraz kilkudziesięciu innych testowych użytkowników (patrz [`mongo-init.js`](mongo-init.js))
+- oraz kilkudziesięciu innych testowych użytkowników z hasłem `test` (patrz [`mongo-init.js`](mongo-init.js))
 
 ---
 
