@@ -234,102 +234,104 @@ export default function GameMulti({ roomId, username, onBack }) {
   return (
     <div className="game-container">
       <h1>Kot i Mysz (Multiplayer)</h1>
-      <div className="game-role-info">
-        Twoja rola: {role === 'mouse' ? '🐭 Mysz' : '🐱 Kot'}
-      </div>
-      <svg width={600} height={600} className="game-board">
-        {edges.map(([a, b], i) => (
-          <line
-            key={i}
-            x1={nodes[a].x * 1.5}
-            y1={nodes[a].y * 1.5}
-            x2={nodes[b].x * 1.5}
-            y2={nodes[b].y * 1.5}
-            stroke="#222"
-            strokeWidth={4}
-          />
-        ))}
-        {nodes.map((node) => {
-          let color = '#fff'
-          if (node.id === game.mousePos) color = 'gold'
-          if (node.id === game.catPos) color = 'tomato'
-          let clickable = false
-          if (role === 'mouse' && game.turn === 'mouse' && isNeighbor(game.mousePos, node.id) && node.id !== game.catPos) clickable = true
-          if (role === 'cat' && game.turn === 'cat' && isNeighbor(game.catPos, node.id) && node.id !== game.mousePos) clickable = true
-          return (
-            <g key={node.id}>
-              <circle
-                cx={node.x * 1.5}
-                cy={node.y * 1.5}
-                r={42}
-                fill={color}
+      <div className="game-main-row" style={{ display: 'flex', alignItems: 'flex-start', gap: 32 }}>
+        <div className="game-board-wrapper">
+          <svg
+            className="game-board"
+            viewBox="0 0 400 400"
+            width="100%"
+            height="100%"
+          >
+            {edges.map(([a, b], i) => (
+              <line
+                key={i}
+                x1={nodes[a].x}
+                y1={nodes[a].y}
+                x2={nodes[b].x}
+                y2={nodes[b].y}
                 stroke="#222"
-                strokeWidth={4}
-                style={{ cursor: clickable ? 'pointer' : 'default', opacity: 1 }}
-                onClick={() => clickable && handleMove(node.id)}
+                strokeWidth={3}
               />
-              <text
-                x={node.x * 1.5}
-                y={node.y * 1.5 + 12}
-                textAnchor="middle"
-                fontSize={node.id === game.mousePos ? 42 : node.id === game.catPos ? 42 : 30}
-                fontFamily="monospace"
-              >
-                {node.id === game.mousePos ? '🐭' : node.id === game.catPos ? '🐱' : ''}
-              </text>
-            </g>
-          )
-        })}
-      </svg>
-      <div className="game-status">
-        {game.winner ? (
-          <>
-            <div className="game-winner">
-              {game.winner === 'mouse'
-                ? 'Wygrała mysz! 🐭'
-                : 'Wygrał kot! 🐱'}
-            </div>
-            <div className="game-rematch-buttons">
-              {!rematch && (
-                <button
-                  className="game-rematch-btn"
-                  onClick={handleRematch}
-                >
-                  Zagraj jeszcze raz
-                </button>
-              )}
-              <button
-                className="game-rematch-btn"
-                onClick={handleLeave}
-              >
-                Wyjdź
-              </button>
-            </div>
-            {rematch && !opponentRematch && (
-              <div className="game-rematch-info">
-                Czekasz na decyzję przeciwnika...
-              </div>
-            )}
-            {rematch && opponentRematch && (
-              <div className="game-rematch-info">
-                Obaj gracze chcą zagrać ponownie! Nowa gra za chwilę...
-              </div>
-            )}
-            {!rematch && opponentRematch && (
-              <div className="game-rematch-info">
-                Przeciwnik chce zagrać ponownie. Kliknij "Zagraj jeszcze raz", aby rozpocząć nową grę.
-              </div>
-            )}
-          </>
-        ) : (
-          `Tura: ${game.turn === 'mouse' ? 'mysz' : 'kot'} | Ruch: ${game.moveCount}/15`
-        )}
-      </div>
-      {!game.winner && (
-        <div className="game-buttons">
-          <button onClick={handleLeave}>Wyjdź</button>
+            ))}
+            {nodes.map((node) => {
+              let color = '#fff'
+              if (node.id === game.mousePos) color = 'gold'
+              if (node.id === game.catPos) color = 'tomato'
+              let clickable = false
+              if (role === 'mouse' && game.turn === 'mouse' && isNeighbor(game.mousePos, node.id) && node.id !== game.catPos) clickable = true
+              if (role === 'cat' && game.turn === 'cat' && isNeighbor(game.catPos, node.id) && node.id !== game.mousePos) clickable = true
+              return (
+                <g key={node.id}>
+                  <circle
+                    cx={node.x}
+                    cy={node.y}
+                    r={42}
+                    fill={color}
+                    stroke="#222"
+                    strokeWidth={3}
+                    style={{
+                      cursor: clickable ? 'pointer' : 'default'
+                    }}
+                    onClick={() => clickable && handleMove(node.id)}
+                  />
+                  <text
+                    x={node.x}
+                    y={node.y + 12}
+                    textAnchor="middle"
+                    fontSize={node.id === game.mousePos ? 42 : node.id === game.catPos ? 42 : 30}
+                    fontFamily="monospace"
+                  >
+                    {node.id === game.mousePos ? '🐭' : node.id === game.catPos ? '🐱' : ''}
+                  </text>
+                </g>
+              )
+            })}
+          </svg>
         </div>
-      )}
+        <div>
+          <div className="game-status">
+            {game.winner
+              ? game.winner === 'mouse'
+                ? 'Wygrała mysz! 🐭'
+                : 'Wygrał kot! 🐱'
+              : `Tura: ${game.turn === 'mouse' ? 'mysz' : 'kot'} | Ruch: ${game.moveCount}/15`}
+          </div>
+          <div className="game-buttons" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {game.winner ? (
+              <>
+                {!rematch && (
+                  <button className="game-rematch-btn" onClick={handleRematch}>
+                    Zagraj jeszcze raz
+                  </button>
+                )}
+                <button className="game-rematch-btn" onClick={handleLeave}>
+                  Wyjdź
+                </button>
+                {rematch && !opponentRematch && (
+                  <div className="game-rematch-info" style={{ marginTop: 8 }}>
+                    Czekasz na decyzję przeciwnika...
+                  </div>
+                )}
+                {rematch && opponentRematch && (
+                  <div className="game-rematch-info" style={{ marginTop: 8 }}>
+                    Obaj gracze chcą zagrać ponownie! Nowa gra za chwilę...
+                  </div>
+                )}
+                {!rematch && opponentRematch && (
+                  <div className="game-rematch-info" style={{ marginTop: 8 }}>
+                    Przeciwnik chce zagrać ponownie. Kliknij "Zagraj jeszcze raz", aby rozpocząć nową grę.
+                  </div>
+                )}
+              </>
+            ) : (
+              <button onClick={handleLeave}>Wyjdź</button>
+            )}
+          </div>
+          <div style={{ marginTop: 24, fontWeight: 'bold', textAlign: 'center' }}>
+            Twoja rola: {role === 'mouse' ? '🐭 Mysz' : '🐱 Kot'}
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

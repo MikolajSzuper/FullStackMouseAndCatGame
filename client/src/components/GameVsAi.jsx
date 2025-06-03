@@ -144,74 +144,86 @@ export default function GameVsAi({ onBack, username }) {
     })
   }, [winner, username, playerRole])
 
-  let info = ''
-  if (playerRole === null) {
-    info = 'Losowanie ról...'
-  } else if (playerRole === 'mouse') {
-    info = 'Twoja rola: 🐭 Mysz'
-  } else {
-    info = 'Twoja rola: 🐱 Kot'
-  }
-
   return (
     <div className="game-container">
       <h1>Kot i Mysz (vs Komputer)</h1>
-      <div className="game-role-info">{info}</div>
-      <svg width={600} height={600} className="game-board">
-        {edges.map(([a, b], i) => (
-          <line
-            key={i}
-            x1={nodes[a].x * 1.5}
-            y1={nodes[a].y * 1.5}
-            x2={nodes[b].x * 1.5}
-            y2={nodes[b].y * 1.5}
-            stroke="#222"
-            strokeWidth={4}
-          />
-        ))}
-        {nodes.map((node) => {
-          let color = '#fff'
-          if (node.id === mousePos) color = 'gold'
-          if (node.id === catPos) color = 'tomato'
-          // Gracz może klikać tylko swoją postacią w swojej turze
-          let clickable = false
-          if (playerRole === 'mouse' && turn === 'mouse' && isNeighbor(mousePos, node.id) && node.id !== catPos) clickable = true
-          if (playerRole === 'cat' && turn === 'cat' && isNeighbor(catPos, node.id) && node.id !== mousePos) clickable = true
-          return (
-            <g key={node.id}>
-              <circle
-                cx={node.x * 1.5}
-                cy={node.y * 1.5}
-                r={42}
-                fill={color}
+      <div className="game-main-row" style={{ display: 'flex', alignItems: 'flex-start', gap: 32 }}>
+        <div className="game-board-wrapper">
+          <svg
+            className="game-board"
+            viewBox="0 0 400 400"
+            width="100%"
+            height="100%"
+          >
+            {edges.map(([a, b], i) => (
+              <line
+                key={i}
+                x1={nodes[a].x}
+                y1={nodes[a].y}
+                x2={nodes[b].x}
+                y2={nodes[b].y}
                 stroke="#222"
-                strokeWidth={4}
-                style={{ cursor: clickable ? 'pointer' : 'default', opacity: 1 }}
-                onClick={() => clickable && handlePlayerMove(node.id)}
+                strokeWidth={3}
               />
-              <text
-                x={node.x * 1.5}
-                y={node.y * 1.5 + 12}
-                textAnchor="middle"
-                fontSize={node.id === mousePos ? 42 : node.id === catPos ? 42 : 30}
-                fontFamily="monospace"
-              >
-                {node.id === mousePos ? '🐭' : node.id === catPos ? '🐱' : ''}
-              </text>
-            </g>
-          )
-        })}
-      </svg>
-      <div className="game-status">
-        {winner
-          ? winner === 'mouse'
-            ? 'Wygrała mysz! 🐭'
-            : 'Wygrał kot! 🐱'
-          : `Tura: ${turn === 'mouse' ? 'mysz' : 'kot'} | Ruch: ${moveCount}/15`}
-      </div>
-      <div className="game-buttons">
-        <button onClick={restartGame}>Restart</button>
-        <button onClick={onBack}>Powrót</button>
+            ))}
+            {nodes.map((node) => {
+              let color = '#fff'
+              if (node.id === mousePos) color = 'gold'
+              if (node.id === catPos) color = 'tomato'
+              // Gracz może klikać tylko swoją postacią w swojej turze
+              let clickable = false
+              if (playerRole === 'mouse' && turn === 'mouse' && isNeighbor(mousePos, node.id) && node.id !== catPos) clickable = true
+              if (playerRole === 'cat' && turn === 'cat' && isNeighbor(catPos, node.id) && node.id !== mousePos) clickable = true
+              return (
+                <g key={node.id}>
+                  <circle
+                    cx={node.x}
+                    cy={node.y}
+                    r={42}
+                    fill={color}
+                    stroke="#222"
+                    strokeWidth={3}
+                    style={{
+                      cursor: clickable ? 'pointer' : 'default'
+                    }}
+                    onClick={() => clickable && handlePlayerMove(node.id)}
+                  />
+                  <text
+                    x={node.x}
+                    y={node.y + 12}
+                    textAnchor="middle"
+                    fontSize={node.id === mousePos ? 42 : node.id === catPos ? 42 : 30}
+                    fontFamily="monospace"
+                  >
+                    {node.id === mousePos ? '🐭' : node.id === catPos ? '🐱' : ''}
+                  </text>
+                </g>
+              )
+            })}
+          </svg>
+        </div>
+        <div>
+          <div className="game-status">
+            {playerRole === null
+              ? 'Losowanie ról...'
+              : winner
+                ? winner === 'mouse'
+                  ? 'Wygrała mysz! 🐭'
+                  : 'Wygrał kot! 🐱'
+                : `Tura: ${turn === 'mouse' ? 'mysz' : 'kot'} | Ruch: ${moveCount}/15`}
+          </div>
+          <div className="game-buttons" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <button onClick={restartGame}>Restart</button>
+            <button onClick={onBack}>Powrót</button>
+          </div>
+          <div style={{ marginTop: 24, fontWeight: 'bold', textAlign: 'center' }}>
+            {playerRole === 'mouse'
+              ? 'Twoja rola: 🐭 Mysz'
+              : playerRole === 'cat'
+                ? 'Twoja rola: 🐱 Kot'
+                : ''}
+          </div>
+        </div>
       </div>
     </div>
   )
