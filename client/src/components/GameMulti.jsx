@@ -34,7 +34,6 @@ export default function GameMulti({ roomId, username, onBack }) {
   const [rematch, setRematch] = useState(false)
   const [opponentRematch, setOpponentRematch] = useState(false)
 
-  // Polling na stan pokoju i gry
   useEffect(() => {
     const token = localStorage.getItem('token')
     const interval = setInterval(() => {
@@ -55,12 +54,10 @@ export default function GameMulti({ roomId, username, onBack }) {
           setRoom(data)
           setLoading(false)
           if (data.game) setGame(data.game)
-          // Ustal role na podstawie kolejności w tablicy players
           if (Array.isArray(data.players)) {
             if (data.players[0] === username) setRole('mouse')
             else if (data.players[1] === username) setRole('cat')
           }
-          // Rematch logic
           if (data.rematchVotes) {
             setOpponentRematch(
               Array.isArray(data.rematchVotes) &&
@@ -77,7 +74,6 @@ export default function GameMulti({ roomId, username, onBack }) {
           setLoading(false)
         })
     }, 1000)
-    // pobierz od razu na start
     fetch(`${API_URL}/api/rooms/${roomId}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
@@ -108,7 +104,6 @@ export default function GameMulti({ roomId, username, onBack }) {
     return () => clearInterval(interval)
   }, [roomId, username])
 
-  // Inicjalizacja gry po dołączeniu drugiego gracza lub rematch
   useEffect(() => {
     if (room && room.players && room.players.length === 2) {
       if (!room.game || (room.rematchVotes && room.rematchVotes.length === 2)) {
@@ -154,7 +149,6 @@ export default function GameMulti({ roomId, username, onBack }) {
           winner: (game.moveCount + 1) >= 15 ? 'mouse' : null
         })
       })
-      // Jeśli mysz wygrała, wyślij wynik do backendu
       if ((game.moveCount + 1) >= 15) {
         await fetch(`${API_URL}/api/rooms/${roomId}/result`, {
           method: 'POST',
@@ -180,7 +174,6 @@ export default function GameMulti({ roomId, username, onBack }) {
           winner
         })
       })
-      // Jeśli kot wygrał, wyślij wynik do backendu
       if (winner) {
         await fetch(`${API_URL}/api/rooms/${roomId}/result`, {
           method: 'POST',
@@ -246,7 +239,6 @@ export default function GameMulti({ roomId, username, onBack }) {
     )
   }
 
-  // Widok gry
   return (
     <div className="game-container">
       <h1>Kot i Mysz (Multiplayer)</h1>

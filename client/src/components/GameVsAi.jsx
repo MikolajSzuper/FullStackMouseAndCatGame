@@ -33,7 +33,6 @@ function getCatMoveRandom(catPos, mousePos) {
 }
 
 export default function GameVsAi({ onBack, username }) {
-  // Losowanie ról na początku gry
   const [playerRole, setPlayerRole] = useState(null) // 'mouse' lub 'cat'
   const [mousePos, setMousePos] = useState(0)
   const [catPos, setCatPos] = useState(5)
@@ -41,7 +40,6 @@ export default function GameVsAi({ onBack, username }) {
   const [winner, setWinner] = useState(null)
   const [moveCount, setMoveCount] = useState(0)
 
-  // Losuj role tylko raz na start
   useEffect(() => {
     setPlayerRole(Math.random() < 0.5 ? 'mouse' : 'cat')
     setMousePos(0)
@@ -110,7 +108,6 @@ export default function GameVsAi({ onBack, username }) {
       }, 500)
     }
     if (playerRole === 'cat' && turn === 'mouse') {
-      // AI gra myszą - losowy ruch na sąsiednie pole nie zajęte przez kota
       const moves = nodes.filter(n => isNeighbor(mousePos, n.id) && n.id !== catPos)
       if (moves.length > 0) {
         const move = moves[Math.floor(Math.random() * moves.length)]
@@ -130,7 +127,6 @@ export default function GameVsAi({ onBack, username }) {
     }
   }, [turn, playerRole, catPos, mousePos, winner])
 
-  // Wyślij wynik do serwera po zakończeniu gry
   useEffect(() => {
     if (!winner || !username) return
     fetch(`${API_URL}/api/result`, {
@@ -170,7 +166,6 @@ export default function GameVsAi({ onBack, username }) {
               let color = '#fff'
               if (node.id === mousePos) color = 'gold'
               if (node.id === catPos) color = 'tomato'
-              // Gracz może klikać tylko swoją postacią w swojej turze
               let clickable = false
               if (playerRole === 'mouse' && turn === 'mouse' && isNeighbor(mousePos, node.id) && node.id !== catPos) clickable = true
               if (playerRole === 'cat' && turn === 'cat' && isNeighbor(catPos, node.id) && node.id !== mousePos) clickable = true
