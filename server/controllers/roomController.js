@@ -10,9 +10,19 @@ function roomToJson(room) {
     players: room.players,
     game: room.game,
     rematchVotes: room.rematchVotes,
-    lastWinner: room.lastWinner
+    lastWinner: room.lastWinner,
+    lastActive: room.lastActive
   }
 }
+
+function touchRoom(room) {
+  room.lastActive = Date.now()
+}
+
+setInterval(() => {
+  const now = Date.now()
+  rooms = rooms.filter(room => (room.lastActive || 0) > now - 5 * 60 * 1000)
+}, 60 * 1000)
 
 exports.getAllRooms = (req, res) => {
   res.json(rooms.map(roomToJson))
@@ -28,6 +38,7 @@ exports.createRoom = (req, res) => {
   const { name, username } = req.body
   const id = 'room' + (rooms.length + 1)
   const newRoom = new Room({ id, name, players: [username || 'user' + (rooms.length + 1)] })
+  newRoom.lastActive = Date.now()
   rooms.push(newRoom)
   res.status(201).json(roomToJson(newRoom))
 }
@@ -36,6 +47,7 @@ exports.joinRoom = (req, res) => {
   const { username } = req.body
   const room = rooms.find(r => r.id === req.params.id)
   if (!room) return res.status(404).json({ error: 'Pokój nie istnieje' })
+  touchRoom(room)
   if (room.players.length >= 2) return res.status(400).json({ error: 'Pokój pełny' })
   if (!room.players.includes(username)) room.players.push(username)
   res.json(roomToJson(room))
@@ -54,6 +66,7 @@ exports.leaveRoom = (req, res) => {
     room.game = null
     room.rematchVotes = []
   }
+  touchRoom(room)
   res.json({ message: 'Gracz opuścił pokój' })
 }
 

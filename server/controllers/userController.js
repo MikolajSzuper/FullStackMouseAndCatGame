@@ -20,7 +20,7 @@ exports.login = async (req, res) => {
   if (!user) return res.status(401).json({ error: 'Błędne dane' })
   const valid = await bcrypt.compare(password, user.password)
   if (!valid) return res.status(401).json({ error: 'Błędne dane' })
-  const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: '1d' })
+  const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: '1h' })
   res.json({ token })
 }
 
@@ -115,4 +115,18 @@ exports.stats = async (req, res) => {
       createdAt: u.createdAt
     }))
   })
+}
+
+exports.deleteMe = async (req, res) => {
+  const auth = req.headers.authorization
+  if (!auth) return res.status(401).json({ error: 'Brak tokena' })
+  try {
+    const decoded = jwt.verify(auth.split(' ')[1], JWT_SECRET)
+    const user = await User.findOne({ username: decoded.username })
+    if (!user) return res.status(404).json({ error: 'Nie znaleziono użytkownika' })
+    await User.deleteOne({ username: decoded.username })
+    res.json({ message: 'Konto zostało usunięte' })
+  } catch {
+    res.status(401).json({ error: 'Nieprawidłowy token' })
+  }
 }

@@ -21,11 +21,16 @@ services:
       - mongo
 
   client:
-    build: ./client
+    build:
+      context: ./client
+      args:
+        - VITE_API_URL=http://localhost:5000
     container_name: client
     restart: always
     ports:
-      - "3000:80"
+      - "80:80"
+    # environment:
+    #   - VITE_API_URL=http://26.197.6.109:5000
     depends_on:
       - server
 

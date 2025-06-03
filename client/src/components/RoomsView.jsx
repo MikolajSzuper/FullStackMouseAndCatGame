@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import GameMulti from './GameMulti'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+
 export default function RoomsView({ onBack, setToast, username }) {
   const [rooms, setRooms] = useState([])
   const [loading, setLoading] = useState(true)
@@ -14,7 +16,7 @@ export default function RoomsView({ onBack, setToast, username }) {
       setJoinedRoomId(savedRoomId)
       return
     }
-    fetch('http://localhost:5000/api/rooms', {
+    fetch(`${API_URL}/api/rooms`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -31,7 +33,7 @@ export default function RoomsView({ onBack, setToast, username }) {
       return
     }
     const token = localStorage.getItem('token')
-    const res = await fetch('http://localhost:5000/api/rooms', {
+    const res = await fetch(`${API_URL}/api/rooms`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -51,7 +53,7 @@ export default function RoomsView({ onBack, setToast, username }) {
 
   const handleJoinRoom = async (roomId) => {
     const token = localStorage.getItem('token')
-    const res = await fetch(`http://localhost:5000/api/rooms/${roomId}/join`, {
+    const res = await fetch(`${API_URL}/api/rooms/${roomId}/join`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -70,7 +72,7 @@ export default function RoomsView({ onBack, setToast, username }) {
   const refreshRooms = () => {
     setLoading(true)
     const token = localStorage.getItem('token')
-    fetch('http://localhost:5000/api/rooms', {
+    fetch(`${API_URL}/api/rooms`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }

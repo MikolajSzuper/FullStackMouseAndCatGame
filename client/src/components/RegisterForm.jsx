@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+
 export default function RegisterForm({ onSuccess, setToast }) {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
@@ -12,19 +14,18 @@ export default function RegisterForm({ onSuccess, setToast }) {
       setToast({ message: 'Hasła nie są takie same', type: 'error' })
       return
     }
-    // Możesz dodać prostą walidację maila
     if (!email.match(/^[^@]+@[^@]+\.[^@]+$/)) {
       setToast({ message: 'Podaj poprawny adres e-mail', type: 'error' })
       return
     }
-    const res = await fetch('http://localhost:5000/api/register', {
+    const res = await fetch(`${API_URL}/api/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, email, password }),
     })
     const data = await res.json()
     if (res.ok) {
-      const loginRes = await fetch('http://localhost:5000/api/login', {
+      const loginRes = await fetch(`${API_URL}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
@@ -43,7 +44,7 @@ export default function RegisterForm({ onSuccess, setToast }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ width: '100%', height: '100%' }}>
+    <form onSubmit={handleSubmit} className="login-form">
       <h2>Rejestracja</h2>
       <label htmlFor="register-username" className="input-label">Nazwa użytkownika</label>
       <input

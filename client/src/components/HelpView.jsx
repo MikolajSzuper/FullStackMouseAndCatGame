@@ -2,7 +2,6 @@ import React from 'react'
 
 export default function HelpView() {
   return (
-    <div className="game-info help-container">
       <div className="help-content">
         <h1>Jak grać w "Kot i Mysz"?</h1>
         <p>
@@ -31,6 +30,5 @@ export default function HelpView() {
         </ul>
         <h2 style={{ textAlign: 'center' }}>Powodzenia!</h2>
       </div>
-    </div>
   )
 }

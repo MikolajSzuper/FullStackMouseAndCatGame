@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+
 export default function ProfileView({ username, setToast }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -8,7 +10,7 @@ export default function ProfileView({ username, setToast }) {
 
   useEffect(() => {
     const token = localStorage.getItem('token')
-    fetch('http://localhost:5000/api/me', {
+    fetch(`${API_URL}/api/me`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -31,7 +33,7 @@ export default function ProfileView({ username, setToast }) {
     e.preventDefault()
     const token = localStorage.getItem('token')
     try {
-      const res = await fetch('http://localhost:5000/api/me', {
+      const res = await fetch(`${API_URL}/api/me`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({
@@ -62,11 +64,32 @@ export default function ProfileView({ username, setToast }) {
     setToast({ message: '', type: '' })
   }
 
+  const handleDelete = async () => {
+    if (!window.confirm('Czy na pewno chcesz usunąć swoje konto? Tej operacji nie można cofnąć!')) return
+    const token = localStorage.getItem('token')
+    try {
+      const res = await fetch(`${API_URL}/api/me`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      if (res.ok) {
+        setToast({ message: 'Konto zostało usunięte', type: 'success' })
+        localStorage.removeItem('token')
+        window.location.reload()
+      } else {
+        const data = await res.json()
+        setToast({ message: data.error || 'Błąd usuwania konta', type: 'error' })
+      }
+    } catch {
+      setToast({ message: 'Błąd połączenia z serwerem', type: 'error' })
+    }
+  }
+
   if (loading) return <div className="game-info">Ładowanie profilu...</div>
   if (!user) return <div className="game-info">Nie znaleziono użytkownika</div>
 
   return (
-    <div className="game-info profile-container">
+    <div className="profile-container">
       <div className="profile-content">
         <h1>Profil użytkownika</h1>
         <div className="profile-info">
@@ -81,10 +104,17 @@ export default function ProfileView({ username, setToast }) {
           Przegrane: {user.stats?.losses ?? 0}
         </div>
         {!edit && (
-          <button
-            onClick={() => setEdit(true)}
-            className="profile-edit-btn save"
-          >Edytuj profil</button>
+          <>
+            <button
+              onClick={() => setEdit(true)}
+              className="profile-edit-btn save"
+            >Edytuj profil</button>
+            <button
+              onClick={handleDelete}
+              className="profile-edit-btn cancel"
+              style={{ marginTop: 12, background: '#c0392b' }}
+            >Usuń konto</button>
+          </>
         )}
         {edit && (
           <form onSubmit={handleSave} className="profile-edit-form">

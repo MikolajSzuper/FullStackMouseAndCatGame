@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import '../GameCommon.css'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+
 const nodes = [
   { id: 0, x: 200, y: 50 },   // mysz start
   { id: 1, x: 80, y: 180 },
@@ -36,7 +38,7 @@ export default function GameMulti({ roomId, username, onBack }) {
   useEffect(() => {
     const token = localStorage.getItem('token')
     const interval = setInterval(() => {
-      fetch(`http://localhost:5000/api/rooms/${roomId}`, {
+      fetch(`${API_URL}/api/rooms/${roomId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
         .then(res => res.json())
@@ -67,7 +69,7 @@ export default function GameMulti({ roomId, username, onBack }) {
         })
     }, 1000)
     // pobierz od razu na start
-    fetch(`http://localhost:5000/api/rooms/${roomId}`, {
+    fetch(`${API_URL}/api/rooms/${roomId}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -104,7 +106,7 @@ export default function GameMulti({ roomId, username, onBack }) {
         // tylko pierwszy gracz inicjuje grę
         if (room.players[0] === username) {
           const token = localStorage.getItem('token')
-          fetch(`http://localhost:5000/api/rooms/${roomId}/game`, {
+          fetch(`${API_URL}/api/rooms/${roomId}/game`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
             body: JSON.stringify({
@@ -115,7 +117,7 @@ export default function GameMulti({ roomId, username, onBack }) {
               moveCount: 0
             })
           }).then(() => {
-            fetch(`http://localhost:5000/api/rooms/${roomId}/rematch`, {
+            fetch(`${API_URL}/api/rooms/${roomId}/rematch`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
               body: JSON.stringify({ reset: true })
@@ -132,7 +134,7 @@ export default function GameMulti({ roomId, username, onBack }) {
     if (!game || game.winner) return
     const token = localStorage.getItem('token')
     if (role === 'mouse' && game.turn === 'mouse' && isNeighbor(game.mousePos, to) && to !== game.catPos) {
-      await fetch(`http://localhost:5000/api/rooms/${roomId}/game`, {
+      await fetch(`${API_URL}/api/rooms/${roomId}/game`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({
@@ -145,7 +147,7 @@ export default function GameMulti({ roomId, username, onBack }) {
       })
       // Jeśli mysz wygrała, wyślij wynik do backendu
       if ((game.moveCount + 1) >= 15) {
-        await fetch(`http://localhost:5000/api/rooms/${roomId}/result`, {
+        await fetch(`${API_URL}/api/rooms/${roomId}/result`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
           body: JSON.stringify({ winner: 'mouse' })
@@ -159,7 +161,7 @@ export default function GameMulti({ roomId, username, onBack }) {
         .map(n => n.id)
       const allDanger = mouseMoves.length > 0 && mouseMoves.every(nid => isNeighbor(to, nid))
       if (allDanger || to === game.mousePos) winner = 'cat'
-      await fetch(`http://localhost:5000/api/rooms/${roomId}/game`, {
+      await fetch(`${API_URL}/api/rooms/${roomId}/game`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({
@@ -171,7 +173,7 @@ export default function GameMulti({ roomId, username, onBack }) {
       })
       // Jeśli kot wygrał, wyślij wynik do backendu
       if (winner) {
-        await fetch(`http://localhost:5000/api/rooms/${roomId}/result`, {
+        await fetch(`${API_URL}/api/rooms/${roomId}/result`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
           body: JSON.stringify({ winner: 'cat' })
@@ -182,7 +184,7 @@ export default function GameMulti({ roomId, username, onBack }) {
 
   const handleLeave = async () => {
     const token = localStorage.getItem('token')
-    await fetch(`http://localhost:5000/api/rooms/${roomId}/leave`, {
+    await fetch(`${API_URL}/api/rooms/${roomId}/leave`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({ username }),
@@ -195,7 +197,7 @@ export default function GameMulti({ roomId, username, onBack }) {
   const handleRematch = async () => {
     setRematch(true)
     const token = localStorage.getItem('token')
-    await fetch(`http://localhost:5000/api/rooms/${roomId}/rematch`, {
+    await fetch(`${API_URL}/api/rooms/${roomId}/rematch`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({ username })
@@ -232,102 +234,104 @@ export default function GameMulti({ roomId, username, onBack }) {
   return (
     <div className="game-container">
       <h1>Kot i Mysz (Multiplayer)</h1>
-      <div className="game-role-info">
-        Twoja rola: {role === 'mouse' ? '🐭 Mysz' : '🐱 Kot'}
-      </div>
-      <svg width={600} height={600} className="game-board">
-        {edges.map(([a, b], i) => (
-          <line
-            key={i}
-            x1={nodes[a].x * 1.5}
-            y1={nodes[a].y * 1.5}
-            x2={nodes[b].x * 1.5}
-            y2={nodes[b].y * 1.5}
-            stroke="#222"
-            strokeWidth={4}
-          />
-        ))}
-        {nodes.map((node) => {
-          let color = '#fff'
-          if (node.id === game.mousePos) color = 'gold'
-          if (node.id === game.catPos) color = 'tomato'
-          let clickable = false
-          if (role === 'mouse' && game.turn === 'mouse' && isNeighbor(game.mousePos, node.id) && node.id !== game.catPos) clickable = true
-          if (role === 'cat' && game.turn === 'cat' && isNeighbor(game.catPos, node.id) && node.id !== game.mousePos) clickable = true
-          return (
-            <g key={node.id}>
-              <circle
-                cx={node.x * 1.5}
-                cy={node.y * 1.5}
-                r={42}
-                fill={color}
+      <div className="game-main-row" style={{ display: 'flex', alignItems: 'flex-start', gap: 32 }}>
+        <div className="game-board-wrapper">
+          <svg
+            className="game-board"
+            viewBox="0 0 400 400"
+            width="100%"
+            height="100%"
+          >
+            {edges.map(([a, b], i) => (
+              <line
+                key={i}
+                x1={nodes[a].x}
+                y1={nodes[a].y}
+                x2={nodes[b].x}
+                y2={nodes[b].y}
                 stroke="#222"
-                strokeWidth={4}
-                style={{ cursor: clickable ? 'pointer' : 'default', opacity: 1 }}
-                onClick={() => clickable && handleMove(node.id)}
+                strokeWidth={3}
               />
-              <text
-                x={node.x * 1.5}
-                y={node.y * 1.5 + 12}
-                textAnchor="middle"
-                fontSize={node.id === game.mousePos ? 42 : node.id === game.catPos ? 42 : 30}
-                fontFamily="monospace"
-              >
-                {node.id === game.mousePos ? '🐭' : node.id === game.catPos ? '🐱' : ''}
-              </text>
-            </g>
-          )
-        })}
-      </svg>
-      <div className="game-status">
-        {game.winner ? (
-          <>
-            <div className="game-winner">
-              {game.winner === 'mouse'
-                ? 'Wygrała mysz! 🐭'
-                : 'Wygrał kot! 🐱'}
-            </div>
-            <div className="game-rematch-buttons">
-              {!rematch && (
-                <button
-                  className="game-rematch-btn"
-                  onClick={handleRematch}
-                >
-                  Zagraj jeszcze raz
-                </button>
-              )}
-              <button
-                className="game-rematch-btn"
-                onClick={handleLeave}
-              >
-                Wyjdź
-              </button>
-            </div>
-            {rematch && !opponentRematch && (
-              <div className="game-rematch-info">
-                Czekasz na decyzję przeciwnika...
-              </div>
-            )}
-            {rematch && opponentRematch && (
-              <div className="game-rematch-info">
-                Obaj gracze chcą zagrać ponownie! Nowa gra za chwilę...
-              </div>
-            )}
-            {!rematch && opponentRematch && (
-              <div className="game-rematch-info">
-                Przeciwnik chce zagrać ponownie. Kliknij "Zagraj jeszcze raz", aby rozpocząć nową grę.
-              </div>
-            )}
-          </>
-        ) : (
-          `Tura: ${game.turn === 'mouse' ? 'mysz' : 'kot'} | Ruch: ${game.moveCount}/15`
-        )}
-      </div>
-      {!game.winner && (
-        <div className="game-buttons">
-          <button onClick={handleLeave}>Wyjdź</button>
+            ))}
+            {nodes.map((node) => {
+              let color = '#fff'
+              if (node.id === game.mousePos) color = 'gold'
+              if (node.id === game.catPos) color = 'tomato'
+              let clickable = false
+              if (role === 'mouse' && game.turn === 'mouse' && isNeighbor(game.mousePos, node.id) && node.id !== game.catPos) clickable = true
+              if (role === 'cat' && game.turn === 'cat' && isNeighbor(game.catPos, node.id) && node.id !== game.mousePos) clickable = true
+              return (
+                <g key={node.id}>
+                  <circle
+                    cx={node.x}
+                    cy={node.y}
+                    r={42}
+                    fill={color}
+                    stroke="#222"
+                    strokeWidth={3}
+                    style={{
+                      cursor: clickable ? 'pointer' : 'default'
+                    }}
+                    onClick={() => clickable && handleMove(node.id)}
+                  />
+                  <text
+                    x={node.x}
+                    y={node.y + 12}
+                    textAnchor="middle"
+                    fontSize={node.id === game.mousePos ? 42 : node.id === game.catPos ? 42 : 30}
+                    fontFamily="monospace"
+                  >
+                    {node.id === game.mousePos ? '🐭' : node.id === game.catPos ? '🐱' : ''}
+                  </text>
+                </g>
+              )
+            })}
+          </svg>
         </div>
-      )}
+        <div>
+          <div className="game-status">
+            {game.winner
+              ? game.winner === 'mouse'
+                ? 'Wygrała mysz! 🐭'
+                : 'Wygrał kot! 🐱'
+              : `Tura: ${game.turn === 'mouse' ? 'mysz' : 'kot'} | Ruch: ${game.moveCount}/15`}
+          </div>
+          <div className="game-buttons" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {game.winner ? (
+              <>
+                {!rematch && (
+                  <button className="game-rematch-btn" onClick={handleRematch}>
+                    Zagraj jeszcze raz
+                  </button>
+                )}
+                <button className="game-rematch-btn" onClick={handleLeave}>
+                  Wyjdź
+                </button>
+                {rematch && !opponentRematch && (
+                  <div className="game-rematch-info" style={{ marginTop: 8 }}>
+                    Czekasz na decyzję przeciwnika...
+                  </div>
+                )}
+                {rematch && opponentRematch && (
+                  <div className="game-rematch-info" style={{ marginTop: 8 }}>
+                    Obaj gracze chcą zagrać ponownie! Nowa gra za chwilę...
+                  </div>
+                )}
+                {!rematch && opponentRematch && (
+                  <div className="game-rematch-info" style={{ marginTop: 8 }}>
+                    Przeciwnik chce zagrać ponownie. Kliknij "Zagraj jeszcze raz", aby rozpocząć nową grę.
+                  </div>
+                )}
+              </>
+            ) : (
+              <button onClick={handleLeave}>Wyjdź</button>
+            )}
+          </div>
+          <div style={{ marginTop: 24, fontWeight: 'bold', textAlign: 'center' }}>
+            Twoja rola: {role === 'mouse' ? '🐭 Mysz' : '🐱 Kot'}
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
