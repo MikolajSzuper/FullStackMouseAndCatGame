@@ -5,6 +5,13 @@ const { JWT_SECRET } = require('../config')
 
 exports.register = async (req, res) => {
   const { username, password, email } = req.body
+  if (
+    !username || typeof username !== 'string' || username.length < 3 ||
+    !password || typeof password !== 'string' || password.length < 3 ||
+    !email || typeof email !== 'string' || !email.match(/^[^@]+@[^@]+\.[^@]+$/)
+  ) {
+    return res.status(400).json({ error: 'Nieprawidłowe dane rejestracji' })
+  }
   if (await User.findOne({ username })) {
     return res.status(400).json({ error: 'Użytkownik już istnieje' })
   }
@@ -16,6 +23,12 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   const { username, password } = req.body
+  if (
+    !username || typeof username !== 'string' ||
+    !password || typeof password !== 'string'
+  ) {
+    return res.status(400).json({ error: 'Nieprawidłowe dane logowania' })
+  }
   const user = await User.findOne({ username })
   if (!user) return res.status(401).json({ error: 'Błędne dane' })
   const valid = await bcrypt.compare(password, user.password)
@@ -45,6 +58,12 @@ exports.me = async (req, res) => {
 // Zapisz wynik gry
 exports.saveResult = async (req, res) => {
   const { username, result } = req.body
+  if (
+    !username || typeof username !== 'string' ||
+    !result || !['win', 'lose'].includes(result)
+  ) {
+    return res.status(400).json({ error: 'Nieprawidłowe dane wyniku' })
+  }
   const user = await User.findOne({ username })
   if (!user) return res.status(404).json({ error: 'Nie znaleziono użytkownika' })
   user.stats.games += 1
@@ -62,9 +81,30 @@ exports.updateMe = async (req, res) => {
     const user = await User.findOne({ username: decoded.username })
     if (!user) return res.status(404).json({ error: 'Nie znaleziono użytkownika' })
 
+    // Walidacja pól
+    if (
+      req.body.username && (typeof req.body.username !== 'string' || req.body.username.length < 3)
+    ) {
+      return res.status(400).json({ error: 'Nieprawidłowa nazwa użytkownika' })
+    }
+    if (
+      req.body.email && (typeof req.body.email !== 'string' || !req.body.email.match(/^[^@]+@[^@]+\.[^@]+$/))
+    ) {
+      return res.status(400).json({ error: 'Nieprawidłowy email' })
+    }
+    if (
+      req.body.newPassword && (typeof req.body.newPassword !== 'string' || req.body.newPassword.length < 3)
+    ) {
+      return res.status(400).json({ error: 'Nieprawidłowe nowe hasło' })
+    }
+    if (
+      !req.body.password || typeof req.body.password !== 'string'
+    ) {
+      return res.status(400).json({ error: 'Podaj aktualne hasło' })
+    }
+
     const valid = await bcrypt.compare(req.body.password, user.password)
     if (!valid) return res.status(401).json({ error: 'Błędne hasło' })
-
 
     if (req.body.username && req.body.username !== user.username) {
       if (await User.findOne({ username: req.body.username })) {
